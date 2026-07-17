@@ -1,0 +1,8 @@
+.claude/
+.DS_Store
+node_modules/
+
+### ignore object files
+*.obj
+*.mtl
+*.glb
