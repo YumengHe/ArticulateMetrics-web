@@ -6,7 +6,7 @@
   <meta name="description" content="Fishbone is a fully automatic mesh deformation framework that turns a single 3D asset into diverse, controllable variations via a coupled rib-spine control structure.">
   <meta name="keywords" content="Fishbone, mesh deformation, rib-spine control structure, geodesic ribs, skinning, dynamics, animation, 3D shape generation, robot learning, data diversification">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Multipart Texture</title>
+  <title>Articulate Metrics</title>
 
   <link rel="stylesheet" href="./static/css/google-fonts-local.css">
   <link rel="stylesheet" href="./static/css/bulma.min.css">
@@ -33,7 +33,7 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Multipart Texture</h1>
+            <h1 class="title is-1 publication-title">Articulate Metrics</h1>
 
             <!-- Authors -->
             <div class="is-size-5 publication-authors">
@@ -106,16 +106,143 @@
     </div>
   </section>
 
+  <!-- Type of Joints Section -->
   <section class="section">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">🎯 Pipeline 🎯</h2>
-          <img src="./static/images/Pipeline.png" class="interpolation-image" />
+          <h2 class="title is-3">🔧 Type of Joints 🔧</h2>
           <div class="content has-text-justified">
             <p>
+              Articulated objects move through a set of canonical joint (link) types, each of which
+              constrains how one part moves relative to another. The joint types below follow the
+              constraint library of
+              <a href="https://api.projectchrono.org/links.html" target="_blank" rel="noopener">Project Chrono</a>.
+              The <em>Constrained DOF</em> column counts how many of the 6 relative degrees of
+              freedom the joint removes, so a Fix joint constrains all 6 and a Free joint constrains none.
             </p>
           </div>
+          <table class="table is-fullwidth is-bordered is-hoverable">
+            <thead>
+              <tr>
+                <th>Joint Type</th>
+                <th>Constrained DOF</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Fix</strong></td>
+                <td>6</td>
+                <td>Fixes both position and rotation; the two parts are rigidly attached.</td>
+              </tr>
+              <tr>
+                <td><strong>Bushing</strong></td>
+                <td>6 | 3</td>
+                <td>Linear compliance with an optional spherical joint.</td>
+              </tr>
+              <tr>
+                <td><strong>Revolute</strong></td>
+                <td>5</td>
+                <td>Allows rotation along the Z axis only.</td>
+              </tr>
+              <tr>
+                <td><strong>Prismatic</strong></td>
+                <td>5</td>
+                <td>Allows translation along the Z axis only.</td>
+              </tr>
+              <tr>
+                <td><strong>Universal</strong></td>
+                <td>4</td>
+                <td>Universal joint that allows rotation about the X and Y axes.</td>
+              </tr>
+              <tr>
+                <td><strong>Revolute&nbsp;+&nbsp;Prismatic</strong></td>
+                <td>4</td>
+                <td>Permits translation along the X axis and rotation about the Z axis.</td>
+              </tr>
+              <tr>
+                <td><strong>Oldham</strong></td>
+                <td>4</td>
+                <td>Oldham joint; does not fix the axes' position.</td>
+              </tr>
+              <tr>
+                <td><strong>Cylindrical</strong></td>
+                <td>4</td>
+                <td>Keeps the Z axes collinear (rotation and translation along Z).</td>
+              </tr>
+              <tr>
+                <td><strong>Spherical</strong></td>
+                <td>3</td>
+                <td>Fixes translations; free rotation about a common point.</td>
+              </tr>
+              <tr>
+                <td><strong>Planar</strong></td>
+                <td>3</td>
+                <td>Keeps the XY planes coplanar (in-plane motion only).</td>
+              </tr>
+              <tr>
+                <td><strong>Aligned</strong></td>
+                <td>3</td>
+                <td>Fixes rotations; free relative translation.</td>
+              </tr>
+              <tr>
+                <td><strong>Revolute&nbsp;+&nbsp;Spherical</strong></td>
+                <td>2</td>
+                <td>Restricts distance relative to the rotation axis.</td>
+              </tr>
+              <tr>
+                <td><strong>Revolute&nbsp;+&nbsp;Align</strong></td>
+                <td>2</td>
+                <td>Permits translation relative to the rotating frame.</td>
+              </tr>
+              <tr>
+                <td><strong>Point&nbsp;on&nbsp;a&nbsp;Plane</strong></td>
+                <td>2</td>
+                <td>Blocks translation along Z; the point stays on a plane.</td>
+              </tr>
+              <tr>
+                <td><strong>Point&nbsp;on&nbsp;a&nbsp;Line</strong></td>
+                <td>2</td>
+                <td>Point belongs to a given line and is free to rotate.</td>
+              </tr>
+              <tr>
+                <td><strong>Parallel</strong></td>
+                <td>2</td>
+                <td>Keeps the Z axes parallel.</td>
+              </tr>
+              <tr>
+                <td><strong>Orthogonal</strong></td>
+                <td>2</td>
+                <td>Keeps the Z axes perpendicular.</td>
+              </tr>
+              <tr>
+                <td><strong>Distance</strong></td>
+                <td>1</td>
+                <td>Fixes the polar distance between two points.</td>
+              </tr>
+              <tr>
+                <td><strong>Rack&#8209;Pinion</strong></td>
+                <td>1</td>
+                <td>Couples rotation of the pinion Z axis with translation of the rack X axis.</td>
+              </tr>
+              <tr>
+                <td><strong>Pulley</strong></td>
+                <td>1</td>
+                <td>Couples rotation over the Z axes with pulley-specific features.</td>
+              </tr>
+              <tr>
+                <td><strong>Gear</strong></td>
+                <td>1</td>
+                <td>Couples rotation over the Z axes with gear-specific features.</td>
+              </tr>
+              <tr>
+                <td><strong>Free</strong></td>
+                <td>0</td>
+                <td>No constraints; full relative motion.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
