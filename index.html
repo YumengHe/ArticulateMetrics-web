@@ -337,6 +337,118 @@
     </div>
   </section>
 
+  <!-- Related Work Section -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3" style="text-align: center;">📚 Related Work 📚</h2>
+      <div class="content has-text-justified" style="max-width: 980px; margin: 0 auto 1.5rem auto;">
+        <p>
+          Prior work on articulated 3D objects spans reconstruction, generation, and real-to-sim
+          modeling. Each line below lists a representative paper and the quantitative metrics it
+          uses to evaluate articulation quality.
+        </p>
+      </div>
+      <div class="related-work-container">
+        <table class="table is-bordered is-striped is-hoverable is-fullwidth related-work-table">
+          <thead>
+            <tr>
+              <th>Paper</th>
+              <th>Venue</th>
+              <th>Metrics Used</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2605.15187" target="_blank" rel="noopener">Articraft</a></td>
+              <td>arXiv 2026</td>
+              <td>User study (prompt alignment &amp; overall quality); downstream Particulate metrics: gIoU, mIoU, part-wise Chamfer (PC), whole-object Chamfer (OC)</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2512.11798" target="_blank" rel="noopener">Particulate</a></td>
+              <td>CVPR 2026</td>
+              <td>gIoU; mIoU; part-wise Chamfer distance (PC); whole-object Chamfer distance (OC)</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2412.11596" target="_blank" rel="noopener">MeshArt</a></td>
+              <td>CVPR 2025</td>
+              <td>ID / AID; COV; MMD; 1-NNA; FID; KID</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2502.02590" target="_blank" rel="noopener">Articulate AnyMesh</a></td>
+              <td>arXiv 2025</td>
+              <td>Joint axis angular error; joint axis position error; manipulation success rate</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2410.16499" target="_blank" rel="noopener">SINGAPO</a></td>
+              <td>ICLR 2025</td>
+              <td>Chamfer Distance (dCD); generalized-IoU; centroid distance; AOR; ID / AID; graph-topology accuracy</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2406.08474" target="_blank" rel="noopener">Real2Code</a></td>
+              <td>ICLR 2025</td>
+              <td>Chamfer Distance (whole / part); joint axis rotation error; joint position error; joint type accuracy</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2410.13882" target="_blank" rel="noopener">Articulate-Anything</a></td>
+              <td>arXiv 2024</td>
+              <td>Link / joint prediction success rate; joint type, axis, and origin error; VLM realism rating</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2405.11656" target="_blank" rel="noopener">URDFormer</a></td>
+              <td>RSS 2024</td>
+              <td>Mesh accuracy; parent accuracy; spatial error; precision / recall / F1; manipulation success rate</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2312.09570" target="_blank" rel="noopener">CAGE</a></td>
+              <td>CVPR 2024</td>
+              <td>MMD / COV under ID and AID (Abstract Instantiation Distance); AOR (Average Overlapping Ratio); 1-NNA</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2305.16315" target="_blank" rel="noopener">NAP</a></td>
+              <td>NeurIPS 2023</td>
+              <td>Instantiation Distance (ID); MMD; COV; 1-NNA</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2308.07391" target="_blank" rel="noopener">PARIS</a></td>
+              <td>ICCV 2023</td>
+              <td>Chamfer Distance (whole / static / movable); axis angular error; axis position error; geodesic error (revolute); translation error (prismatic)</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2303.15782" target="_blank" rel="noopener">CARTO</a></td>
+              <td>CVPR 2023</td>
+              <td>Chamfer Distance; mAP @ 3D IoU25 / IoU50; mAP @ pose thresholds; joint type accuracy; joint state error</td>
+            </tr>
+            <tr>
+              <td><a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Liu_Building_Rearticulable_Models_for_Arbitrary_3D_Objects_From_4D_Point_CVPR_2023_paper.pdf" target="_blank" rel="noopener">Reart</a></td>
+              <td>CVPR 2023</td>
+              <td>Chamfer Distance / reconstruction error; Rand Index; Tree Edit Distance; scene-flow EPE (Acc5 / Acc10 / angle error); retargeting error</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2202.08227" target="_blank" rel="noopener">Ditto</a></td>
+              <td>CVPR 2022</td>
+              <td>Chamfer Distance (whole / mobile part); joint axis angular error; joint position error; joint type accuracy</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2112.11347" target="_blank" rel="noopener">Watch It Move</a></td>
+              <td>CVPR 2022</td>
+              <td>LPIPS; SSIM; MPJPE (mean per-joint position error)</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2104.07645" target="_blank" rel="noopener">A-SDF</a></td>
+              <td>ICCV 2021</td>
+              <td>Chamfer Distance; joint angle error</td>
+            </tr>
+            <tr>
+              <td><a href="https://arxiv.org/abs/2003.08515" target="_blank" rel="noopener">SAPIEN / PartNet-Mobility</a></td>
+              <td>CVPR 2020</td>
+              <td>mAP for movable-part segmentation; motion-axis alignment; joint pivot / position error; joint type classification</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
 <style>
     /* Type of Joints example-image column */
     .joints-table td,
@@ -366,6 +478,38 @@
         .joint-example { width: 110px; }
         .joint-example img { width: 96px; height: 68px; }
         .joint-example-caption { font-size: 0.68rem; }
+    }
+
+    /* Related Work table: fit width, no horizontal scroll */
+    .related-work-container {
+        margin: 0 auto;
+        max-width: 980px;
+    }
+    .related-work-table {
+        table-layout: fixed;
+        width: 100%;
+        font-size: 0.9rem;
+        line-height: 1.35;
+    }
+    .related-work-table th,
+    .related-work-table td {
+        vertical-align: top;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    .related-work-table th:nth-child(1),
+    .related-work-table td:nth-child(1) {
+        width: 20%;
+        font-weight: 600;
+    }
+    .related-work-table th:nth-child(2),
+    .related-work-table td:nth-child(2) {
+        width: 15%;
+        white-space: nowrap;
+    }
+    .related-work-table th:nth-child(3),
+    .related-work-table td:nth-child(3) {
+        width: 65%;
     }
 
     .compare-paper-container {
