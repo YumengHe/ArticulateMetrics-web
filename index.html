@@ -122,12 +122,13 @@
               freedom the joint removes, so a Fix joint constrains all 6 and a Free joint constrains none.
             </p>
           </div>
-          <table class="table is-fullwidth is-bordered is-hoverable">
+          <table class="table is-fullwidth is-bordered is-hoverable joints-table">
             <thead>
               <tr>
                 <th>Joint Type</th>
                 <th>Constrained DOF</th>
                 <th>Description</th>
+                <th>Example</th>
               </tr>
             </thead>
             <tbody>
@@ -135,111 +136,199 @@
                 <td><strong>Fix</strong></td>
                 <td>6</td>
                 <td>Fixes both position and rotation; the two parts are rigidly attached.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/fix.jpg" alt="Welded pipe joint" loading="lazy">
+                  <div class="joint-example-caption">Welded pipe joint</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Bushing</strong></td>
                 <td>6 | 3</td>
                 <td>Linear compliance with an optional spherical joint.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/bushing.jpg" alt="Rubber suspension bushing" loading="lazy">
+                  <div class="joint-example-caption">Rubber suspension bushing</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Revolute</strong></td>
                 <td>5</td>
                 <td>Allows rotation along the Z axis only.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/revolute.jpg" alt="Door hinge" loading="lazy">
+                  <div class="joint-example-caption">Door hinge</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Prismatic</strong></td>
                 <td>5</td>
                 <td>Allows translation along the Z axis only.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/prismatic.jpg" alt="Drawer slide rail" loading="lazy">
+                  <div class="joint-example-caption">Drawer slide rail</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Universal</strong></td>
                 <td>4</td>
                 <td>Universal joint that allows rotation about the X and Y axes.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/universal.jpg" alt="Universal (Cardan) joint" loading="lazy">
+                  <div class="joint-example-caption">Universal (Cardan) joint</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Revolute&nbsp;+&nbsp;Prismatic</strong></td>
                 <td>4</td>
                 <td>Permits translation along the X axis and rotation about the Z axis.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/revolute-prismatic.jpg" alt="Hydraulic tie-rod cylinder" loading="lazy">
+                  <div class="joint-example-caption">Hydraulic cylinder rod</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Oldham</strong></td>
                 <td>4</td>
                 <td>Oldham joint; does not fix the axes' position.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/oldham.jpg" alt="Oldham coupling" loading="lazy">
+                  <div class="joint-example-caption">Oldham coupling</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Cylindrical</strong></td>
                 <td>4</td>
                 <td>Keeps the Z axes collinear (rotation and translation along Z).</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/cylindrical.jpg" alt="Telescopic hydraulic cylinder" loading="lazy">
+                  <div class="joint-example-caption">Telescopic hydraulic cylinder</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Spherical</strong></td>
                 <td>3</td>
                 <td>Fixes translations; free rotation about a common point.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/spherical.jpg" alt="Rod-end (heim) bearing" loading="lazy">
+                  <div class="joint-example-caption">Rod-end (heim) bearing</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Planar</strong></td>
                 <td>3</td>
                 <td>Keeps the XY planes coplanar (in-plane motion only).</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/planar.jpg" alt="Air-hockey table and puck" loading="lazy">
+                  <div class="joint-example-caption">Air-hockey puck</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Aligned</strong></td>
                 <td>3</td>
                 <td>Fixes rotations; free relative translation.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/aligned.jpg" alt="Linear guide rail and carriage" loading="lazy">
+                  <div class="joint-example-caption">Linear guide rail</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Revolute&nbsp;+&nbsp;Spherical</strong></td>
                 <td>2</td>
                 <td>Restricts distance relative to the rotation axis.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/revolute-spherical.jpg" alt="Tie-rod ball joint" loading="lazy">
+                  <div class="joint-example-caption">Tie-rod ball joint</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Revolute&nbsp;+&nbsp;Align</strong></td>
                 <td>2</td>
                 <td>Permits translation relative to the rotating frame.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/revolute-align.jpg" alt="Splined shaft" loading="lazy">
+                  <div class="joint-example-caption">Splined shaft</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Point&nbsp;on&nbsp;a&nbsp;Plane</strong></td>
                 <td>2</td>
                 <td>Blocks translation along Z; the point stays on a plane.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/point-on-plane.jpg" alt="Ball resting on a table" loading="lazy">
+                  <div class="joint-example-caption">Ball on a table</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Point&nbsp;on&nbsp;a&nbsp;Line</strong></td>
                 <td>2</td>
                 <td>Point belongs to a given line and is free to rotate.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/point-on-line.jpg" alt="Bead threaded on a rod" loading="lazy">
+                  <div class="joint-example-caption">Bead on a rod</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Parallel</strong></td>
                 <td>2</td>
                 <td>Keeps the Z axes parallel.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/parallel.jpg" alt="Pantograph linkage" loading="lazy">
+                  <div class="joint-example-caption">Pantograph linkage</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Orthogonal</strong></td>
                 <td>2</td>
                 <td>Keeps the Z axes perpendicular.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/orthogonal.jpg" alt="Bevel gear pair" loading="lazy">
+                  <div class="joint-example-caption">Bevel gear pair</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Distance</strong></td>
                 <td>1</td>
                 <td>Fixes the polar distance between two points.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/distance.jpg" alt="Turnbuckle" loading="lazy">
+                  <div class="joint-example-caption">Turnbuckle</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Rack&#8209;Pinion</strong></td>
                 <td>1</td>
                 <td>Couples rotation of the pinion Z axis with translation of the rack X axis.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/rack-pinion.png" alt="Rack and pinion" loading="lazy">
+                  <div class="joint-example-caption">Rack and pinion</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Pulley</strong></td>
                 <td>1</td>
                 <td>Couples rotation over the Z axes with pulley-specific features.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/pulley.jpg" alt="Pulley with rope" loading="lazy">
+                  <div class="joint-example-caption">Pulley</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Gear</strong></td>
                 <td>1</td>
                 <td>Couples rotation over the Z axes with gear-specific features.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/gear.jpg" alt="Meshing spur gears" loading="lazy">
+                  <div class="joint-example-caption">Meshing spur gears</div>
+                </td>
               </tr>
               <tr>
                 <td><strong>Free</strong></td>
                 <td>0</td>
                 <td>No constraints; full relative motion.</td>
+                <td class="joint-example">
+                  <img src="./static/images/joints/free.jpg" alt="Untethered spacewalk" loading="lazy">
+                  <div class="joint-example-caption">Free-floating (untethered)</div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -249,6 +338,36 @@
   </section>
 
 <style>
+    /* Type of Joints example-image column */
+    .joints-table td,
+    .joints-table th {
+        vertical-align: middle;
+    }
+    .joint-example {
+        text-align: center;
+        width: 170px;
+    }
+    .joint-example img {
+        width: 150px;
+        height: 105px;
+        object-fit: cover;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+        display: block;
+        margin: 0 auto;
+    }
+    .joint-example-caption {
+        font-size: 0.78rem;
+        color: #666;
+        margin-top: 5px;
+        line-height: 1.25;
+    }
+    @media (max-width: 768px) {
+        .joint-example { width: 110px; }
+        .joint-example img { width: 96px; height: 68px; }
+        .joint-example-caption { font-size: 0.68rem; }
+    }
+
     .compare-paper-container {
         overflow-x: auto;
         margin: 0 auto;
