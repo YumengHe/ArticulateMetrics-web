@@ -337,6 +337,25 @@
     </div>
   </section>
 
+  <!-- Demonstration of Errors Section -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">🎞️ Demonstration of Errors 🎞️</h2>
+          <div class="content has-text-justified">
+            <p>
+              The animations below illustrate different articulation errors against the
+              ground-truth motion. More error cases will be added here.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Populated dynamically from static/demo/demo.json -->
+      <div class="error-demo-grid" id="error-demo-grid"></div>
+    </div>
+  </section>
+
   <!-- Related Work Section -->
   <section class="section">
     <div class="container is-max-desktop">
@@ -478,6 +497,61 @@
         .joint-example { width: 110px; }
         .joint-example img { width: 96px; height: 68px; }
         .joint-example-caption { font-size: 0.68rem; }
+    }
+
+    /* Demonstration of Errors gif grid */
+    .error-demo-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1000px;
+        margin: 1rem auto 0 auto;
+    }
+    .error-demo-item {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .error-demo-item:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 10px #b6a9cf;
+    }
+    .error-demo-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+        display: block;
+    }
+    .error-demo-item h4 {
+        margin-top: 10px;
+        font-size: 1.1em;
+        color: #555;
+        font-weight: 600;
+    }
+    .demo-params {
+        margin-top: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+    .demo-param {
+        font-size: 0.88em;
+        line-height: 1.4;
+    }
+    .demo-param-gt { color: #2e7d32; }
+    .demo-param-wrong { color: #c62828; }
+    @media (max-width: 768px) {
+        .error-demo-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .error-demo-item h4 { font-size: 0.95em; }
+        .demo-param { font-size: 0.8em; }
     }
 
     /* Related Work table: fit width, no horizontal scroll */
@@ -1628,6 +1702,9 @@
   }
 </style>
 
+<!-- Demonstration of Errors data (loaded as a global so it also works when opening index.html directly via file://) -->
+<script src="./static/demo/demo.js"></script>
+
 <script>
   // Strip trailing digits and replace underscores so folder keys like "bread11" or
   // "monstera_tree" become "bread" / "monstera tree" for display. CSS capitalizes the
@@ -2049,6 +2126,36 @@
           </div>
         </div>`;
   }
+
+  // Demonstration of Errors: render gif cards from static/demo/demo.js.
+  // Edit that file (title / description / order / add entries) to update this section.
+  function loadErrorDemos() {
+      const grid = document.getElementById('error-demo-grid');
+      if (!grid) return;
+      const items = window.DEMO_ERROR_ITEMS;
+      if (!Array.isArray(items)) {
+          console.error('DEMO_ERROR_ITEMS not found — is static/demo/demo.js loaded?');
+          return;
+      }
+      const esc = (s) => String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      grid.innerHTML = items.map((it) => {
+          const rows = [];
+          if (it.gt != null && it.gt !== '')
+              rows.push(`<span class="demo-param demo-param-gt"><b>GT:</b> ${esc(it.gt)}</span>`);
+          if (it.wrong != null && it.wrong !== '')
+              rows.push(`<span class="demo-param demo-param-wrong"><b>Wrong:</b> ${esc(it.wrong)}</span>`);
+          const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
+          return `
+          <div class="error-demo-item">
+            <img src="static/demo/${esc(it.file)}" alt="${esc(it.title)}" loading="lazy">
+            <h4>${esc(it.title)}</h4>
+            ${params}
+          </div>`;
+      }).join('');
+  }
+  window.addEventListener('DOMContentLoaded', loadErrorDemos);
 
   async function loadComparisonSliders() {
       const wrapper = document.getElementById('comparison-carousel-wrapper');
