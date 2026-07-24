@@ -34,7 +34,10 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Articulate Metrics</h1>
+            <h1 class="title is-1 publication-title publication-title-with-logo">
+              <img src="./static/images/articulatemetrics-icon.svg" alt="Articulate Metrics logo" class="publication-logo" />
+              <span>Articulate Metrics</span>
+            </h1>
 
             <!-- Authors -->
             <div class="is-size-5 publication-authors">
@@ -61,7 +64,7 @@
   </section> -->
 
     <!-- Image Slider Section -->
-    <section class="hero is-light is-small">
+    <!-- <section class="hero is-light is-small">
       <div class="hero-body">
         <div class="container">
           <div class="comparison-carousel-wrapper" id="comparison-carousel-wrapper">
@@ -69,7 +72,6 @@
                     id="comparison-carousel-prev" aria-label="Previous">‹</button>
             <div class="comparison-carousel-viewport" id="comparison-carousel-viewport">
               <div class="comparison-carousel-track" id="comparison-carousel-track">
-                <!-- Populated dynamically: auto-detected from demo/ -->
               </div>
             </div>
             <button class="comparison-carousel-arrow comparison-carousel-arrow-next"
@@ -77,7 +79,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
   
   <section class="section">
     <div class="container is-max-desktop">
@@ -87,7 +89,26 @@
           <h2 class="title is-3">✨ Abstract ✨</h2>
           <div class="content has-text-justified">
             <p>
-              
+              Methods that reconstruct simulation-ready articulated objects are evaluated by an
+              ad-hoc template of per-joint scores: an axis-direction error, a pivot error, a
+              categorical joint-type error, and, in the most complete protocols, a motion-limit
+              error, reported separately or thresholded into a success rate. We show this template
+              grades the representation rather than the motion it encodes. The pivot term divides by
+              the cross product of the two axes and so diverges precisely when predictions become
+              accurate; the type error is discontinuous at the fixed/revolute/prismatic boundaries
+              that are physically continuous; and where the limits are scored, they are folded back
+              onto the axis in a way that reintroduces the axis-sign ambiguity, so the same joint
+              written with a flipped axis and renamed limits scores maximally against itself and
+              unbounded joints cannot be scored at all. We propose a single metric on one-DOF joints
+              that removes each of these failures by construction: the quotient distance between the
+              unordered pair of Lie-algebra endpoint twists of the two joints. It is a true metric,
+              unifies fixed, revolute, prismatic, and helical joints, admits unbounded (continuous)
+              joints as limit points of a radial compactification, and, under the kinetic-energy
+              inner product of the moving link, equals the RMS physical displacement of that link's
+              material, turning the score into a motion discrepancy in meters. We lift the metric to
+              full kinematic trees with geometry, prove its metric axioms and its equivalence to
+              swept-motion discrepancy, and outline re-evaluation of published methods on
+              PartNet-Mobility under it.
             </p>
           </div>
         </div>
@@ -470,6 +491,20 @@
   </section>
 
 <style>
+    /* Title logo */
+    .publication-title-with-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+        flex-wrap: wrap;
+    }
+    .publication-logo {
+        height: 1.1em;
+        width: auto;
+        vertical-align: middle;
+    }
+
     /* Type of Joints example-image column */
     .joints-table td,
     .joints-table th {
