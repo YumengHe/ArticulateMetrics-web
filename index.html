@@ -132,7 +132,7 @@
   <section class="section">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
+        <div class="column">
           <h2 class="title is-3">🔧 Types of Joints 🔧</h2>
           <div class="content has-text-justified">
             <p>
@@ -140,220 +140,255 @@
               constrains how one part moves relative to another. The joint types below follow the
               constraint library of
               <a href="https://api.projectchrono.org/links.html" target="_blank" rel="noopener">Project Chrono</a>.
-              The <em>Constrained DOF</em> column counts how many of the 6 relative degrees of
-              freedom the joint removes, so a Fix joint constrains all 6 and a Free joint constrains none.
+              The <em>Constrained DOF</em> badge on each card counts how many of the 6 relative
+              degrees of freedom the joint removes, so a Fix joint constrains all 6 and a Free joint
+              constrains none.
             </p>
           </div>
-          <table class="table is-fullwidth is-bordered is-hoverable joints-table">
-            <thead>
-              <tr>
-                <th>Joint Type</th>
-                <th>Constrained DOF</th>
-                <th>Description</th>
-                <th>Example</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Fix</strong></td>
-                <td>6</td>
-                <td>Fixes both position and rotation; the two parts are rigidly attached.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/fix.jpg" alt="Welded pipe joint" loading="lazy">
-                  <div class="joint-example-caption">Welded pipe joint</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Bushing</strong></td>
-                <td>6 | 3</td>
-                <td>Linear compliance with an optional spherical joint.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/bushing.jpg" alt="Rubber suspension bushing" loading="lazy">
-                  <div class="joint-example-caption">Rubber suspension bushing</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Revolute</strong></td>
-                <td>5</td>
-                <td>Allows rotation along the Z axis only.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/revolute.jpg" alt="Door hinge" loading="lazy">
-                  <div class="joint-example-caption">Door hinge</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Prismatic</strong></td>
-                <td>5</td>
-                <td>Allows translation along the Z axis only.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/prismatic.jpg" alt="Drawer slide rail" loading="lazy">
-                  <div class="joint-example-caption">Drawer slide rail</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Universal</strong></td>
-                <td>4</td>
-                <td>Universal joint that allows rotation about the X and Y axes.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/universal.jpg" alt="Universal (Cardan) joint" loading="lazy">
-                  <div class="joint-example-caption">Universal (Cardan) joint</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Revolute&nbsp;+&nbsp;Prismatic</strong></td>
-                <td>4</td>
-                <td>Permits translation along the X axis and rotation about the Z axis.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/revolute-prismatic.jpg" alt="Hydraulic tie-rod cylinder" loading="lazy">
-                  <div class="joint-example-caption">Hydraulic cylinder rod</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Oldham</strong></td>
-                <td>4</td>
-                <td>Oldham joint; does not fix the axes' position.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/oldham.jpg" alt="Oldham coupling" loading="lazy">
-                  <div class="joint-example-caption">Oldham coupling</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Cylindrical</strong></td>
-                <td>4</td>
-                <td>Keeps the Z axes collinear (rotation and translation along Z).</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/cylindrical.jpg" alt="Telescopic hydraulic cylinder" loading="lazy">
-                  <div class="joint-example-caption">Telescopic hydraulic cylinder</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Spherical</strong></td>
-                <td>3</td>
-                <td>Fixes translations; free rotation about a common point.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/spherical.jpg" alt="Rod-end (heim) bearing" loading="lazy">
-                  <div class="joint-example-caption">Rod-end (heim) bearing</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Planar</strong></td>
-                <td>3</td>
-                <td>Keeps the XY planes coplanar (in-plane motion only).</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/planar.jpg" alt="Air-hockey table and puck" loading="lazy">
-                  <div class="joint-example-caption">Air-hockey puck</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Aligned</strong></td>
-                <td>3</td>
-                <td>Fixes rotations; free relative translation.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/aligned.jpg" alt="Linear guide rail and carriage" loading="lazy">
-                  <div class="joint-example-caption">Linear guide rail</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Revolute&nbsp;+&nbsp;Spherical</strong></td>
-                <td>2</td>
-                <td>Restricts distance relative to the rotation axis.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/revolute-spherical.jpg" alt="Tie-rod ball joint" loading="lazy">
-                  <div class="joint-example-caption">Tie-rod ball joint</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Revolute&nbsp;+&nbsp;Align</strong></td>
-                <td>2</td>
-                <td>Permits translation relative to the rotating frame.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/revolute-align.jpg" alt="Splined shaft" loading="lazy">
-                  <div class="joint-example-caption">Splined shaft</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Point&nbsp;on&nbsp;a&nbsp;Plane</strong></td>
-                <td>2</td>
-                <td>Blocks translation along Z; the point stays on a plane.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/point-on-plane.jpg" alt="Ball resting on a table" loading="lazy">
-                  <div class="joint-example-caption">Ball on a table</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Point&nbsp;on&nbsp;a&nbsp;Line</strong></td>
-                <td>2</td>
-                <td>Point belongs to a given line and is free to rotate.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/point-on-line.jpg" alt="Bead threaded on a rod" loading="lazy">
-                  <div class="joint-example-caption">Bead on a rod</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Parallel</strong></td>
-                <td>2</td>
-                <td>Keeps the Z axes parallel.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/parallel.jpg" alt="Pantograph linkage" loading="lazy">
-                  <div class="joint-example-caption">Pantograph linkage</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Orthogonal</strong></td>
-                <td>2</td>
-                <td>Keeps the Z axes perpendicular.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/orthogonal.jpg" alt="Bevel gear pair" loading="lazy">
-                  <div class="joint-example-caption">Bevel gear pair</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Distance</strong></td>
-                <td>1</td>
-                <td>Fixes the polar distance between two points.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/distance.jpg" alt="Turnbuckle" loading="lazy">
-                  <div class="joint-example-caption">Turnbuckle</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Rack&#8209;Pinion</strong></td>
-                <td>1</td>
-                <td>Couples rotation of the pinion Z axis with translation of the rack X axis.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/rack-pinion.png" alt="Rack and pinion" loading="lazy">
-                  <div class="joint-example-caption">Rack and pinion</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Pulley</strong></td>
-                <td>1</td>
-                <td>Couples rotation over the Z axes with pulley-specific features.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/pulley.jpg" alt="Pulley with rope" loading="lazy">
-                  <div class="joint-example-caption">Pulley</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Gear</strong></td>
-                <td>1</td>
-                <td>Couples rotation over the Z axes with gear-specific features.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/gear.jpg" alt="Meshing spur gears" loading="lazy">
-                  <div class="joint-example-caption">Meshing spur gears</div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Free</strong></td>
-                <td>0</td>
-                <td>No constraints; full relative motion.</td>
-                <td class="joint-example">
-                  <img src="./static/images/joints/free.jpg" alt="Untethered spacewalk" loading="lazy">
-                  <div class="joint-example-caption">Free-floating (untethered)</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        </div>
+      </div>
+      <div class="joints-grid">
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/fix.jpg" alt="Welded pipe joint" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">6 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Fix</h4>
+            <p class="joint-card-desc">Fixes both position and rotation; the two parts are rigidly attached.</p>
+            <div class="joint-card-example">Welded pipe joint</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/bushing.jpg" alt="Rubber suspension bushing" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">6 | 3 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Bushing</h4>
+            <p class="joint-card-desc">Linear compliance with an optional spherical joint.</p>
+            <div class="joint-card-example">Rubber suspension bushing</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/revolute.jpg" alt="Door hinge" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">5 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Revolute</h4>
+            <p class="joint-card-desc">Allows rotation along the Z axis only.</p>
+            <div class="joint-card-example">Door hinge</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/prismatic.jpg" alt="Drawer slide rail" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">5 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Prismatic</h4>
+            <p class="joint-card-desc">Allows translation along the Z axis only.</p>
+            <div class="joint-card-example">Drawer slide rail</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/universal.jpg" alt="Universal (Cardan) joint" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Universal</h4>
+            <p class="joint-card-desc">Universal joint that allows rotation about the X and Y axes.</p>
+            <div class="joint-card-example">Universal (Cardan) joint</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/revolute-prismatic.jpg" alt="Hydraulic tie-rod cylinder" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Revolute + Prismatic</h4>
+            <p class="joint-card-desc">Permits translation along the X axis and rotation about the Z axis.</p>
+            <div class="joint-card-example">Hydraulic cylinder rod</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/oldham.jpg" alt="Oldham coupling" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Oldham</h4>
+            <p class="joint-card-desc">Oldham joint; does not fix the axes' position.</p>
+            <div class="joint-card-example">Oldham coupling</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/cylindrical.jpg" alt="Telescopic hydraulic cylinder" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Cylindrical</h4>
+            <p class="joint-card-desc">Keeps the Z axes collinear (rotation and translation along Z).</p>
+            <div class="joint-card-example">Telescopic hydraulic cylinder</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/spherical.jpg" alt="Rod-end (heim) bearing" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">3 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Spherical</h4>
+            <p class="joint-card-desc">Fixes translations; free rotation about a common point.</p>
+            <div class="joint-card-example">Rod-end (heim) bearing</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/planar.jpg" alt="Air-hockey table and puck" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">3 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Planar</h4>
+            <p class="joint-card-desc">Keeps the XY planes coplanar (in-plane motion only).</p>
+            <div class="joint-card-example">Air-hockey puck</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/aligned.jpg" alt="Linear guide rail and carriage" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">3 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Aligned</h4>
+            <p class="joint-card-desc">Fixes rotations; free relative translation.</p>
+            <div class="joint-card-example">Linear guide rail</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/revolute-spherical.jpg" alt="Tie-rod ball joint" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Revolute + Spherical</h4>
+            <p class="joint-card-desc">Restricts distance relative to the rotation axis.</p>
+            <div class="joint-card-example">Tie-rod ball joint</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/revolute-align.jpg" alt="Splined shaft" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Revolute + Align</h4>
+            <p class="joint-card-desc">Permits translation relative to the rotating frame.</p>
+            <div class="joint-card-example">Splined shaft</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/point-on-plane.jpg" alt="Ball resting on a table" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Point on a Plane</h4>
+            <p class="joint-card-desc">Blocks translation along Z; the point stays on a plane.</p>
+            <div class="joint-card-example">Ball on a table</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/point-on-line.jpg" alt="Bead threaded on a rod" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Point on a Line</h4>
+            <p class="joint-card-desc">Point belongs to a given line and is free to rotate.</p>
+            <div class="joint-card-example">Bead on a rod</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/parallel.jpg" alt="Pantograph linkage" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Parallel</h4>
+            <p class="joint-card-desc">Keeps the Z axes parallel.</p>
+            <div class="joint-card-example">Pantograph linkage</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/orthogonal.jpg" alt="Bevel gear pair" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Orthogonal</h4>
+            <p class="joint-card-desc">Keeps the Z axes perpendicular.</p>
+            <div class="joint-card-example">Bevel gear pair</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/distance.jpg" alt="Turnbuckle" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Distance</h4>
+            <p class="joint-card-desc">Fixes the polar distance between two points.</p>
+            <div class="joint-card-example">Turnbuckle</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/rack-pinion.png" alt="Rack and pinion" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Rack&#8209;Pinion</h4>
+            <p class="joint-card-desc">Couples rotation of the pinion Z axis with translation of the rack X axis.</p>
+            <div class="joint-card-example">Rack and pinion</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/pulley.jpg" alt="Pulley with rope" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Pulley</h4>
+            <p class="joint-card-desc">Couples rotation over the Z axes with pulley-specific features.</p>
+            <div class="joint-card-example">Pulley</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/gear.jpg" alt="Meshing spur gears" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Gear</h4>
+            <p class="joint-card-desc">Couples rotation over the Z axes with gear-specific features.</p>
+            <div class="joint-card-example">Meshing spur gears</div>
+          </div>
+        </div>
+        <div class="joint-card">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/free.jpg" alt="Untethered spacewalk" loading="lazy">
+            <span class="joint-dof" title="Constrained degrees of freedom">0 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Free</h4>
+            <p class="joint-card-desc">No constraints; full relative motion.</p>
+            <div class="joint-card-example">Free-floating (untethered)</div>
+          </div>
         </div>
       </div>
     </div>
@@ -505,34 +540,83 @@
         vertical-align: middle;
     }
 
-    /* Types of Joints example-image column */
-    .joints-table td,
-    .joints-table th {
-        vertical-align: middle;
+    /* Types of Joints card grid */
+    .joints-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+        gap: 18px;
+        margin-top: 1rem;
     }
-    .joint-example {
-        text-align: center;
-        width: 170px;
+    .joint-card {
+        background: #fff;
+        border: 1px solid #e4e4e4;
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
-    .joint-example img {
-        width: 150px;
-        height: 105px;
+    .joint-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(182, 169, 207, 0.55);
+    }
+    .joint-card-media {
+        position: relative;
+        line-height: 0;
+    }
+    .joint-card-media img {
+        width: 100%;
+        height: 165px;
         object-fit: cover;
-        border-radius: 6px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
         display: block;
-        margin: 0 auto;
     }
-    .joint-example-caption {
-        font-size: 0.78rem;
-        color: #666;
-        margin-top: 5px;
-        line-height: 1.25;
+    .joint-dof {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(139, 140, 192, 0.92);
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 600;
+        line-height: 1.2;
+        padding: 3px 9px;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+    .joint-card-body {
+        padding: 11px 13px 14px;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .joint-card-title {
+        font-size: 1.05em;
+        font-weight: 700;
+        color: #363636;
+        margin-bottom: 5px;
+    }
+    .joint-card-desc {
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.4;
+        flex: 1;
+        margin: 0;
+    }
+    .joint-card-example {
+        margin-top: 9px;
+        padding-top: 7px;
+        border-top: 1px solid #eee;
+        font-size: 0.75rem;
+        color: #8a8a8a;
     }
     @media (max-width: 768px) {
-        .joint-example { width: 110px; }
-        .joint-example img { width: 96px; height: 68px; }
-        .joint-example-caption { font-size: 0.68rem; }
+        .joints-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .joint-card-media img { height: 130px; }
     }
 
     /* Demonstration of Errors gif grid */
