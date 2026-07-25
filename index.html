@@ -672,6 +672,12 @@
     }
     .demo-param-gt { color: #2e7d32; }
     .demo-param-wrong { color: #c62828; }
+    .demo-param-error {
+        color: #1f2d5a;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+    .demo-param-error.demo-param-val { font-weight: 700; }
     @media (max-width: 768px) {
         .error-demo-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -2273,6 +2279,8 @@
               rows.push(`<span class="demo-param-label demo-param-gt">GT:</span><span class="demo-param-val demo-param-gt">${esc(it.gt)}</span>`);
           if (it.wrong != null && it.wrong !== '')
               rows.push(`<span class="demo-param-label demo-param-wrong">Wrong:</span><span class="demo-param-val demo-param-wrong">${esc(it.wrong)}</span>`);
+          if (it.error != null && it.error !== '')
+              rows.push(`<span class="demo-param-label demo-param-error">Error:</span><span class="demo-param-val demo-param-error">${esc(it.error)}</span>`);
           const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
           return `
           <div class="error-demo-item">
