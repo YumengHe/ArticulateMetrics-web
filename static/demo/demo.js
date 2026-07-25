@@ -15,13 +15,13 @@ window.DEMO_ERROR_ITEMS = [
   {
     file: "mobility_0_type_animation.gif",
     title: "Joint Type Error",
-    gt: "revolute",
-    wrong: "prismatic"
+    gt: "joint type: revolute",
+    wrong: "joint type: prismatic"
   },
   {
     file: "mobility_0_limit_animation.gif",
     title: "Joint Limit Error",
-    gt: "0° – 90°",
-    wrong: "0° – 150°"
+    gt: "joint limit: 0 - 0.76",
+    wrong: "joint limit: -0.76 - 0"
   }
 ];

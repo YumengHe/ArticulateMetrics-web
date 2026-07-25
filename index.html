@@ -128,12 +128,12 @@
     </div>
   </section>
 
-  <!-- Type of Joints Section -->
+  <!-- Types of Joints Section -->
   <section class="section">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">🔧 Type of Joints 🔧</h2>
+          <h2 class="title is-3">🔧 Types of Joints 🔧</h2>
           <div class="content has-text-justified">
             <p>
               Articulated objects move through a set of canonical joint (link) types, each of which
@@ -505,7 +505,7 @@
         vertical-align: middle;
     }
 
-    /* Type of Joints example-image column */
+    /* Types of Joints example-image column */
     .joints-table td,
     .joints-table th {
         vertical-align: middle;
@@ -570,14 +570,21 @@
     }
     .demo-params {
         margin-top: 6px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-    }
-    .demo-param {
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: center;
+        column-gap: 0.35em;
+        row-gap: 2px;
         font-size: 0.88em;
         line-height: 1.4;
+    }
+    .demo-param-label {
+        text-align: right;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .demo-param-val {
+        text-align: left;
     }
     .demo-param-gt { color: #2e7d32; }
     .demo-param-wrong { color: #c62828; }
@@ -587,7 +594,7 @@
             gap: 12px;
         }
         .error-demo-item h4 { font-size: 0.95em; }
-        .demo-param { font-size: 0.8em; }
+        .demo-params { font-size: 0.8em; }
     }
 
     /* Related Work table: fit width, no horizontal scroll */
@@ -2179,9 +2186,9 @@
       grid.innerHTML = items.map((it) => {
           const rows = [];
           if (it.gt != null && it.gt !== '')
-              rows.push(`<span class="demo-param demo-param-gt"><b>GT:</b> ${esc(it.gt)}</span>`);
+              rows.push(`<span class="demo-param-label demo-param-gt">GT:</span><span class="demo-param-val demo-param-gt">${esc(it.gt)}</span>`);
           if (it.wrong != null && it.wrong !== '')
-              rows.push(`<span class="demo-param demo-param-wrong"><b>Wrong:</b> ${esc(it.wrong)}</span>`);
+              rows.push(`<span class="demo-param-label demo-param-wrong">Wrong:</span><span class="demo-param-val demo-param-wrong">${esc(it.wrong)}</span>`);
           const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
           return `
           <div class="error-demo-item">
