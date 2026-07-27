@@ -140,18 +140,19 @@
               constrains how one part moves relative to another. The joint types below follow the
               constraint library of
               <a href="https://api.projectchrono.org/links.html" target="_blank" rel="noopener">Project Chrono</a>.
-              The <em>Constrained DOF</em> badge on each card counts how many of the 6 relative
-              degrees of freedom the joint removes, so a Fix joint constrains all 6 and a Free joint
-              constrains none.
+              The <em>DOF</em> badge on each card counts how many of the 6 relative degrees of
+              freedom the joint allows, so a Fix joint has 0 and a Free joint has all 6. Cards
+              outlined in <span style="color:#c79a00; font-weight:600;">yellow</span> are the joint
+              types our metric currently supports.
             </p>
           </div>
         </div>
       </div>
       <div class="joints-grid">
-        <div class="joint-card">
+        <div class="joint-card joint-card-supported">
           <div class="joint-card-media">
             <img src="./static/images/joints/fix.jpg" alt="Welded pipe joint" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">6 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">0 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Fix</h4>
@@ -159,21 +160,21 @@
             <div class="joint-card-example">Welded pipe joint</div>
           </div>
         </div>
-        <div class="joint-card">
+        <div class="joint-card joint-card-supported">
           <div class="joint-card-media">
-            <img src="./static/images/joints/bushing.jpg" alt="Rubber suspension bushing" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">6 | 3 DOF</span>
+            <img src="./static/images/joints/prismatic.jpg" alt="Syringe plunger" loading="lazy">
+            <span class="joint-dof" title="Degrees of freedom">1 DOF</span>
           </div>
           <div class="joint-card-body">
-            <h4 class="joint-card-title">Bushing</h4>
-            <p class="joint-card-desc">Linear compliance with an optional spherical joint.</p>
-            <div class="joint-card-example">Rubber suspension bushing</div>
+            <h4 class="joint-card-title">Prismatic</h4>
+            <p class="joint-card-desc">Allows translation along the Z axis only.</p>
+            <div class="joint-card-example">Syringe plunger</div>
           </div>
         </div>
-        <div class="joint-card">
+        <div class="joint-card joint-card-supported">
           <div class="joint-card-media">
             <img src="./static/images/joints/revolute.jpg" alt="Door hinge" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">5 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">1 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Revolute</h4>
@@ -181,21 +182,32 @@
             <div class="joint-card-example">Door hinge</div>
           </div>
         </div>
-        <div class="joint-card">
+        <div class="joint-card joint-card-supported">
           <div class="joint-card-media">
-            <img src="./static/images/joints/prismatic.jpg" alt="Drawer slide rail" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">5 DOF</span>
+            <img src="./static/images/joints/continuous.jpg" alt="Wooden cart wheel" loading="lazy">
+            <span class="joint-dof" title="Degrees of freedom">1 DOF</span>
           </div>
           <div class="joint-card-body">
-            <h4 class="joint-card-title">Prismatic</h4>
-            <p class="joint-card-desc">Allows translation along the Z axis only.</p>
-            <div class="joint-card-example">Drawer slide rail</div>
+            <h4 class="joint-card-title">Continuous</h4>
+            <p class="joint-card-desc">A revolute joint with no motion limit; rotates freely and unbounded about the Z axis.</p>
+            <div class="joint-card-example">Wooden cart wheel</div>
+          </div>
+        </div>
+        <div class="joint-card joint-card-supported">
+          <div class="joint-card-media">
+            <img src="./static/images/joints/helical.jpg" alt="Threaded bolt and nut" loading="lazy">
+            <span class="joint-dof" title="Degrees of freedom">1 DOF</span>
+          </div>
+          <div class="joint-card-body">
+            <h4 class="joint-card-title">Helical</h4>
+            <p class="joint-card-desc">Rotation and translation along the Z axis coupled at a fixed ratio (the thread pitch), like a screw.</p>
+            <div class="joint-card-example">Bolt and nut</div>
           </div>
         </div>
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/universal.jpg" alt="Universal (Cardan) joint" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">2 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Universal</h4>
@@ -206,7 +218,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/revolute-prismatic.jpg" alt="Hydraulic tie-rod cylinder" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">2 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Revolute + Prismatic</h4>
@@ -217,7 +229,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/oldham.jpg" alt="Oldham coupling" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">2 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Oldham</h4>
@@ -228,7 +240,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/cylindrical.jpg" alt="Telescopic hydraulic cylinder" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">4 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">2 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Cylindrical</h4>
@@ -239,7 +251,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/spherical.jpg" alt="Rod-end (heim) bearing" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">3 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">3 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Spherical</h4>
@@ -250,7 +262,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/planar.jpg" alt="Air-hockey table and puck" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">3 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">3 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Planar</h4>
@@ -261,7 +273,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/aligned.jpg" alt="Linear guide rail and carriage" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">3 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">3 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Aligned</h4>
@@ -272,7 +284,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/revolute-spherical.jpg" alt="Tie-rod ball joint" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">4 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Revolute + Spherical</h4>
@@ -283,7 +295,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/revolute-align.jpg" alt="Splined shaft" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">4 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Revolute + Align</h4>
@@ -294,7 +306,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/point-on-plane.jpg" alt="Ball resting on a table" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">4 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Point on a Plane</h4>
@@ -305,7 +317,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/point-on-line.jpg" alt="Bead threaded on a rod" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">4 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Point on a Line</h4>
@@ -316,7 +328,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/parallel.jpg" alt="Pantograph linkage" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">4 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Parallel</h4>
@@ -327,7 +339,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/orthogonal.jpg" alt="Bevel gear pair" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">2 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">4 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Orthogonal</h4>
@@ -338,7 +350,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/distance.jpg" alt="Turnbuckle" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">5 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Distance</h4>
@@ -349,7 +361,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/rack-pinion.png" alt="Rack and pinion" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">5 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Rack&#8209;Pinion</h4>
@@ -360,7 +372,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/pulley.jpg" alt="Pulley with rope" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">5 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Pulley</h4>
@@ -371,7 +383,7 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/gear.jpg" alt="Meshing spur gears" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">1 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">5 DOF</span>
           </div>
           <div class="joint-card-body">
             <h4 class="joint-card-title">Gear</h4>
@@ -382,10 +394,10 @@
         <div class="joint-card">
           <div class="joint-card-media">
             <img src="./static/images/joints/free.jpg" alt="Untethered spacewalk" loading="lazy">
-            <span class="joint-dof" title="Constrained degrees of freedom">0 DOF</span>
+            <span class="joint-dof" title="Degrees of freedom">6 DOF</span>
           </div>
           <div class="joint-card-body">
-            <h4 class="joint-card-title">Free</h4>
+            <h4 class="joint-card-title">Floating/Free</h4>
             <p class="joint-card-desc">No constraints; full relative motion.</p>
             <div class="joint-card-example">Free-floating (untethered)</div>
           </div>
@@ -560,6 +572,25 @@
     .joint-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 6px 16px rgba(182, 169, 207, 0.55);
+    }
+    /* Joints supported by our metric */
+    .joint-card-supported {
+        border: 3px solid #f5c518;
+        box-shadow: 0 2px 8px rgba(245, 197, 24, 0.4);
+    }
+    .joint-card-supported .joint-card-title::after {
+        content: "Supported";
+        display: inline-block;
+        margin-left: 6px;
+        vertical-align: middle;
+        background: #f5c518;
+        color: #4a3b00;
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 999px;
     }
     .joint-card-media {
         position: relative;
