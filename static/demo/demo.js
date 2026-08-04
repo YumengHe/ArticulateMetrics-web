@@ -22,14 +22,14 @@ window.DEMO_ERROR_ITEMS = [
     file: "mobility_0_axis_animation.gif",
     title: "Joint 0 Axis Error",
     gt: "joint axis: [0 0 1]",
-    wrong: "joint axis: [0.5 0 0.866025]",
-    error: "0.393"
+    wrong: "joint axis: [-1 0 0]",
+    error: "1.075"
   },
   {
     file: "mobility_0_origin_animation.gif",
     title: "Joint 0 Origin Error",
     gt: "joint origin: [-0.0141503 0.537587 0.492051]",
-    wrong: "joint origin: [-0.0141503 0.637587 0.492051]",
+    wrong: "joint origin: [-0.0141503 1.53759 0.492051]",
     error: "0.000"
   },
   {
@@ -57,15 +57,22 @@ window.DEMO_ERROR_ITEMS = [
     file: "mobility_1_axis_animation.gif",
     title: "Joint 1 Axis Error",
     gt: "joint axis: [0 -1 0]",
-    wrong: "joint axis: [0.5 -0.866025 0]",
-    error: "0.986"
+    wrong: "joint axis: [-1 0 0]",
+    error: "2.703"
+  },
+  {
+    file: "mobility_1_axis_neg_animation.gif",
+    title: "Joint 1 Negated Axis Error",
+    gt: "joint axis: [0 -1 0]",
+    wrong: "joint axis: [0 1 0]",
+    error: "2.600"
   },
   {
     file: "mobility_1_origin_animation.gif",
     title: "Joint 1 Origin Error",
     gt: "joint origin: [-0.357699 -0.590594 0.491555]",
-    wrong: "joint origin: [-0.357699 -0.590594 0.591555]",
-    error: "0.157"
+    wrong: "joint origin: [-0.357699 -0.590594 1.49156]",
+    error: "1.571"
   },
   {
     file: "mobility_1_limit_animation.gif",
@@ -80,5 +87,26 @@ window.DEMO_ERROR_ITEMS = [
     gt: "joint limit: 0 - 1.5708",
     wrong: "joint limit: 0 - 2.35619",
     error: "0.919"
+  },
+  {
+    file: "mobility_1_axis_limit_animation.gif",
+    title: "Joint 1 Axis + Limit Error",
+    gt: "axis [0 -1 0], limit 0 - 1.5708",
+    wrong: "axis [0 1 0], limit -1.5708 - 0",
+    error: "0.000"
+  },
+  {
+    file: "mobility_2_prismatic_animation.gif",
+    title: "Joint 2 Fixed as Prismatic",
+    gt: "joint type: fixed",
+    wrong: "joint type: prismatic (limit 0 - 0.001)",
+    error: "0.001"
+  },
+  {
+    file: "mobility_2_revolute_animation.gif",
+    title: "Joint 2 Fixed as Revolute",
+    gt: "joint type: fixed",
+    wrong: "joint type: revolute (limit 0 - 0.001)",
+    error: "0.001"
   }
 ];
