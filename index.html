@@ -425,6 +425,20 @@
     </div>
   </section>
 
+  <!-- Qualitative Articulation Results Section -->
+  <section class="section articulation-results-section" id="qualitative-results">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Qualitative Results</h2>
+        </div>
+      </div>
+      <div class="articulation-results-scroll">
+        <div class="articulation-results-grid" id="articulation-results-grid"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Related Work Section -->
   <section class="section">
     <div class="container is-max-desktop">
@@ -648,6 +662,77 @@
             gap: 12px;
         }
         .joint-card-media img { height: 130px; }
+    }
+
+    /* Generated SPARK / URDFormer qualitative comparison. */
+    .articulation-results-scroll {
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+    .articulation-results-grid {
+        display: grid;
+        grid-template-columns: 112px repeat(5, minmax(180px, 1fr));
+        gap: 1px;
+        min-width: 1100px;
+        overflow: hidden;
+        border: 1px solid #d9dde3;
+        border-radius: 6px;
+        background: #d9dde3;
+    }
+    .articulation-results-header,
+    .articulation-results-label,
+    .articulation-results-cell {
+        background: #fff;
+    }
+    .articulation-results-header {
+        padding: 12px 10px;
+        color: #2e343b;
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-align: center;
+    }
+    .articulation-results-label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 12px;
+        line-height: 1.25;
+    }
+    .articulation-results-label strong {
+        color: #24292f;
+        font-size: 0.9rem;
+    }
+    .articulation-results-label span {
+        margin-top: 4px;
+        color: #6b7280;
+        font-size: 0.75rem;
+    }
+    .articulation-results-cell {
+        min-width: 0;
+        padding: 10px;
+        text-align: center;
+    }
+    .articulation-results-cell img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        background: #fff;
+    }
+    .articulation-result-meta {
+        min-height: 18px;
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 0.72rem;
+        line-height: 18px;
+    }
+    @media (max-width: 768px) {
+        .articulation-results-grid {
+            grid-template-columns: 90px repeat(5, 190px);
+            min-width: 660px;
+        }
+        .articulation-results-label { padding: 8px; }
+        .articulation-results-cell { padding: 7px; }
     }
 
     /* Demonstration of Errors gif grid */
@@ -1868,6 +1953,7 @@
 
 <!-- Demonstration of Errors data (loaded as a global so it also works when opening index.html directly via file://) -->
 <script src="./static/demo/demo.js"></script>
+<script src="./static/articulation-results/results.js"></script>
 
 <script>
   // Strip trailing digits and replace underscores so folder keys like "bread11" or
@@ -2322,6 +2408,46 @@
       }).join('');
   }
   window.addEventListener('DOMContentLoaded', loadErrorDemos);
+
+  function loadArticulationResults() {
+      const grid = document.getElementById('articulation-results-grid');
+      if (!grid) return;
+      const items = window.ARTICULATION_RESULTS;
+      if (!Array.isArray(items) || items.length === 0) {
+          grid.closest('.articulation-results-section').style.display = 'none';
+          return;
+      }
+      const esc = (value) => String(value == null ? '' : value)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      grid.innerHTML = [
+          '<div class="articulation-results-header">Case</div>',
+          '<div class="articulation-results-header">Input</div>',
+          '<div class="articulation-results-header">SPARK</div>',
+          '<div class="articulation-results-header">URDFormer</div>',
+          '<div class="articulation-results-header">ArtLLM</div>',
+          '<div class="articulation-results-header">Articulate-Anything</div>',
+          ...items.flatMap((item) => {
+              const base = `static/articulation-results/${encodeURIComponent(item.id)}`;
+              const cell = (source, alt, meta) => `
+                <div class="articulation-results-cell">
+                  <img src="${source}" alt="${esc(alt)}">
+                  <div class="articulation-result-meta">${esc(meta)}</div>
+                </div>`;
+              const joints = (m) => item.methods[m].movableJoints;
+              const jmeta = (m) => `${joints(m)} movable joint${joints(m) === 1 ? '' : 's'}`;
+              return [
+                  `<div class="articulation-results-label"><strong>${esc(item.category)}</strong><span>ID ${esc(item.id)}</span></div>`,
+                  cell(`${base}/input.png`, `${item.category} input`, 'Front view'),
+                  cell(`${base}/spark.gif`, `${item.category} SPARK articulation`, jmeta('spark')),
+                  cell(`${base}/urdformer.gif`, `${item.category} URDFormer articulation`, jmeta('urdformer')),
+                  cell(`${base}/artllm.gif`, `${item.category} ArtLLM articulation`, jmeta('artllm')),
+                  cell(`${base}/articulate.gif`, `${item.category} Articulate-Anything articulation`, jmeta('articulate'))
+              ];
+          })
+      ].join('');
+  }
+  window.addEventListener('DOMContentLoaded', loadArticulationResults);
 
   async function loadComparisonSliders() {
       const wrapper = document.getElementById('comparison-carousel-wrapper');
