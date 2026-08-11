@@ -15,6 +15,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_electrical_cabinet_door_62710cc8df1545f4a13eec66728b89ab",
+        "sourceCategory": "electrical_cabinet_door",
+        "movableJoints": 3
       }
     }
   },
@@ -33,6 +41,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_laptop_clamshell_6cfe6a47a212465caba2507553bb4e29",
+        "sourceCategory": "laptop",
+        "movableJoints": 48
       }
     }
   },
@@ -51,6 +67,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_dehumidifier_with_pullout_water_bucket_e0ff960e3a994dcb971f878c09fed033",
+        "sourceCategory": "dehumidifier",
+        "movableJoints": 6
       }
     }
   },
@@ -69,6 +93,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_refrigerator_with_hinged_doors_b8e33ff065b04a37ad2f85a1e6ab1590",
+        "sourceCategory": "refrigerator",
+        "movableJoints": 4
       }
     }
   },
@@ -87,6 +119,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_desktop_monitor_with_tilt_swivel_stand_5b10bd0c8ddf463da869d80fb57766f9",
+        "sourceCategory": "monitor",
+        "movableJoints": 7
       }
     }
   },
@@ -105,6 +145,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_drawer_cabinet_with_sliding_drawers_d9b3813d1e7a4204929050f394a22cce",
+        "sourceCategory": "drawer_cabinet",
+        "movableJoints": 5
       }
     }
   },
@@ -122,6 +170,14 @@ window.ARTICULATION_RESULTS = [
         "movableJoints": 2
       },
       "articulate": {
+        "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_screwcap_bottle_095b9ba28ec747ab82240a291d4b3e29",
+        "sourceCategory": "screwcap_bottle",
         "movableJoints": 1
       }
     }
@@ -141,6 +197,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_sliding_window_06ab752a31b04b3a8108e12640a07d2c",
+        "sourceCategory": "sliding_window",
+        "movableJoints": 1
       }
     }
   },
@@ -159,6 +223,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_lounge_chair_with_independent_backrest_and_footrest_415793483ae540319d0cf39f68455281",
+        "sourceCategory": "lounge_chair",
+        "movableJoints": 2
       }
     }
   },
@@ -177,6 +249,14 @@ window.ARTICULATION_RESULTS = [
       },
       "articulate": {
         "movableJoints": 1
+      },
+      "ditto": {
+        "movableJoints": 1
+      },
+      "articraft": {
+        "source": "rec_globe_0c24de54ab0046e1a81be7cade16fbdb",
+        "sourceCategory": "globe",
+        "movableJoints": 4
       }
     }
   }

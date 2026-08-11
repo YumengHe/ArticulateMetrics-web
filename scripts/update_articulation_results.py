@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the 10-case SPARK/URDFormer preview assets used by index.html."""
+"""Build benchmark and Articraft preview assets used by index.html."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageOps
 
 DEFAULT_DATA_ROOT = Path("/nas/yumenghe_shared/articulatemetrics_data")
+DEFAULT_ARTICRAFT_ROOT = DEFAULT_DATA_ROOT / "library/Articraft-10K"
 DEFAULT_RENDERER = Path(
     "/data/yongfeishe/ArticulateMetrics/render/render_urdf_all_joints.py"
 )
@@ -28,7 +29,11 @@ METHODS = {
     "spark": ["SPARK/{id}/mobility.urdf"],
     "urdformer": ["URDFormer/{id}/model.urdf", "URDFormer/_archive_full_100/{id}/model.urdf"],
     "artllm": ["ArtLLM/{id}/urdf/{id}.urdf"],
-    "articulate": ["ArticulateAnything/{id}/final/mobility.urdf"],
+    "articulate": [
+        "ArticulateAnything/{id}/mobility.urdf",
+        "ArticulateAnything/{id}/final/mobility.urdf",
+    ],
+    "ditto": ["Ditto/{id}/model.urdf"],
 }
 
 
@@ -46,6 +51,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--renderer", type=Path, default=DEFAULT_RENDERER)
     parser.add_argument("--python", type=Path, default=DEFAULT_PYTHON)
     parser.add_argument("--output", type=Path, default=repo / "static/articulation-results")
+    parser.add_argument(
+        "--articraft-root",
+        type=Path,
+        default=DEFAULT_ARTICRAFT_ROOT,
+        help="Articraft-10K asset root used for category-matched benchmark results.",
+    )
+    parser.add_argument(
+        "--articraft-ids-file",
+        type=Path,
+        default=repo / "articraft-results-cases.txt",
+        help="Benchmark case ID to Articraft asset-directory mapping.",
+    )
     parser.add_argument("--frames", type=int, default=12)
     parser.add_argument("--fps", type=float, default=10.0)
     parser.add_argument("--image-size", type=int, default=384)
@@ -170,6 +187,8 @@ def render_one(
                 "--up-axis",
                 "z",
             ]
+        if method == "spark":
+            command.extend(["--profile", "spark"])
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode:
             raise RuntimeError(
@@ -187,11 +206,47 @@ def write_manifest(output: Path, items: list[dict]) -> None:
     )
 
 
+def load_articraft_items(root: Path, ids_file: Path, output: Path) -> dict[str, dict]:
+    """Copy each mapped Articraft preview into its benchmark case directory."""
+    mappings = {}
+    for line_number, raw_line in enumerate(ids_file.read_text().splitlines(), start=1):
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        fields = line.split(maxsplit=1)
+        if len(fields) != 2:
+            raise ValueError(f"Invalid Articraft mapping at {ids_file}:{line_number}")
+        case_id, name = fields
+        if case_id in mappings:
+            raise ValueError(f"Duplicate Articraft mapping for case {case_id}")
+        asset = root / name
+        urdf = asset / "model.urdf"
+        preview = asset / "preview.png"
+        info_path = asset / "info.json"
+        if not urdf.is_file() or not preview.is_file():
+            raise FileNotFoundError(f"Missing Articraft URDF or preview for {name} under {root}")
+        info = json.loads(info_path.read_text()) if info_path.is_file() else {}
+        destination = output / case_id / "articraft.png"
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(preview, destination)
+        mappings[case_id] = {
+            "source": name,
+            "sourceCategory": info.get("category", "Articraft asset"),
+            "movableJoints": joint_count(urdf),
+        }
+    if not mappings:
+        raise ValueError(f"No Articraft mappings listed in {ids_file}")
+    return mappings
+
+
 def main() -> None:
     args = parse_args()
     ids_file = args.ids_file or args.data_root / "eval_100.txt"
     case_ids = load_ids(ids_file, args.count)
     args.output.mkdir(parents=True, exist_ok=True)
+    articraft_items = load_articraft_items(
+        args.articraft_root, args.articraft_ids_file, args.output
+    )
 
     tasks = []
     items = []
@@ -211,6 +266,9 @@ def main() -> None:
             urdf = resolve_urdf(args.data_root, key, case_id)
             item["methods"][key] = {"movableJoints": joint_count(urdf)}
             tasks.append((key, case_id, urdf, case_output / f"{key}.gif"))
+        if case_id not in articraft_items:
+            raise ValueError(f"Missing Articraft mapping for benchmark case {case_id}")
+        item["methods"]["articraft"] = articraft_items[case_id]
         items.append(item)
 
     with ThreadPoolExecutor(max_workers=max(1, args.jobs)) as executor:
@@ -219,7 +277,10 @@ def main() -> None:
             print(future.result(), flush=True)
 
     write_manifest(args.output, items)
-    print(f"Updated {len(items)} cases in {args.output}")
+    print(
+        f"Updated {len(items)} benchmark cases and {len(articraft_items)} Articraft assets "
+        f"in {args.output}"
+    )
 
 
 if __name__ == "__main__":

@@ -664,16 +664,24 @@
         .joint-card-media img { height: 130px; }
     }
 
-    /* Generated SPARK / URDFormer qualitative comparison. */
+    /* Generated articulation-method qualitative comparison. */
     .articulation-results-scroll {
-        overflow-x: auto;
+        max-height: min(78vh, 900px);
+        overflow: auto;
         padding-bottom: 8px;
+        cursor: grab;
+        user-select: none;
+        touch-action: pan-x pan-y;
+        scrollbar-gutter: stable;
+    }
+    .articulation-results-scroll.is-dragging {
+        cursor: grabbing;
     }
     .articulation-results-grid {
         display: grid;
-        grid-template-columns: 112px repeat(5, minmax(180px, 1fr));
+        grid-template-columns: 112px repeat(7, minmax(180px, 1fr));
         gap: 1px;
-        min-width: 1100px;
+        min-width: 1400px;
         overflow: hidden;
         border: 1px solid #d9dde3;
         border-radius: 6px;
@@ -718,6 +726,7 @@
         aspect-ratio: 1 / 1;
         object-fit: contain;
         background: #fff;
+        pointer-events: none;
     }
     .articulation-result-meta {
         min-height: 18px;
@@ -728,8 +737,8 @@
     }
     @media (max-width: 768px) {
         .articulation-results-grid {
-            grid-template-columns: 90px repeat(5, 190px);
-            min-width: 660px;
+            grid-template-columns: 90px repeat(7, 190px);
+            min-width: 1420px;
         }
         .articulation-results-label { padding: 8px; }
         .articulation-results-cell { padding: 7px; }
@@ -2427,6 +2436,8 @@
           '<div class="articulation-results-header">URDFormer</div>',
           '<div class="articulation-results-header">ArtLLM</div>',
           '<div class="articulation-results-header">Articulate-Anything</div>',
+          '<div class="articulation-results-header">Ditto</div>',
+          '<div class="articulation-results-header">Articraft</div>',
           ...items.flatMap((item) => {
               const base = `static/articulation-results/${encodeURIComponent(item.id)}`;
               const cell = (source, alt, meta) => `
@@ -2442,12 +2453,55 @@
                   cell(`${base}/spark.gif`, `${item.category} SPARK articulation`, jmeta('spark')),
                   cell(`${base}/urdformer.gif`, `${item.category} URDFormer articulation`, jmeta('urdformer')),
                   cell(`${base}/artllm.gif`, `${item.category} ArtLLM articulation`, jmeta('artllm')),
-                  cell(`${base}/articulate.gif`, `${item.category} Articulate-Anything articulation`, jmeta('articulate'))
+                  cell(`${base}/articulate.gif`, `${item.category} Articulate-Anything articulation`, jmeta('articulate')),
+                  cell(`${base}/ditto.gif`, `${item.category} Ditto articulation`, jmeta('ditto')),
+                  cell(`${base}/articraft.png`, `${item.category} Articraft result`, jmeta('articraft'))
               ];
           })
       ].join('');
   }
   window.addEventListener('DOMContentLoaded', loadArticulationResults);
+
+  function enableArticulationResultsDrag() {
+      const scroller = document.querySelector('.articulation-results-scroll');
+      if (!scroller) return;
+
+      let pointerId = null;
+      let startX = 0;
+      let startY = 0;
+      let startScrollLeft = 0;
+      let startScrollTop = 0;
+
+      scroller.addEventListener('pointerdown', (event) => {
+          if (event.button !== 0) return;
+          pointerId = event.pointerId;
+          startX = event.clientX;
+          startY = event.clientY;
+          startScrollLeft = scroller.scrollLeft;
+          startScrollTop = scroller.scrollTop;
+          scroller.classList.add('is-dragging');
+          scroller.setPointerCapture(pointerId);
+      });
+
+      scroller.addEventListener('pointermove', (event) => {
+          if (event.pointerId !== pointerId) return;
+          scroller.scrollLeft = startScrollLeft - (event.clientX - startX);
+          scroller.scrollTop = startScrollTop - (event.clientY - startY);
+          event.preventDefault();
+      });
+
+      const stopDragging = (event) => {
+          if (event.pointerId !== pointerId) return;
+          pointerId = null;
+          scroller.classList.remove('is-dragging');
+          if (scroller.hasPointerCapture(event.pointerId)) {
+              scroller.releasePointerCapture(event.pointerId);
+          }
+      };
+      scroller.addEventListener('pointerup', stopDragging);
+      scroller.addEventListener('pointercancel', stopDragging);
+  }
+  window.addEventListener('DOMContentLoaded', enableArticulationResultsDrag);
 
   async function loadComparisonSliders() {
       const wrapper = document.getElementById('comparison-carousel-wrapper');
