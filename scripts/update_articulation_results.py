@@ -14,14 +14,10 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageOps
 
-DEFAULT_DATA_ROOT = Path("/nas/yumenghe_shared/articulatemetrics_data")
+DEFAULT_DATA_ROOT = Path("data/articulatemetrics_data")
 DEFAULT_ARTICRAFT_ROOT = DEFAULT_DATA_ROOT / "library/Articraft-10K"
-DEFAULT_RENDERER = Path(
-    "/data/yongfeishe/ArticulateMetrics/render/render_urdf_all_joints.py"
-)
-DEFAULT_PYTHON = Path(
-    "/data/yongfeishe/miniconda3/envs/sparkprivate/bin/python"
-)
+DEFAULT_RENDERER = Path("render/render_urdf_all_joints.py")
+DEFAULT_PYTHON = Path("python3")
 # Each method maps to an ordered list of URDF path templates (relative to the data
 # root); the first existing candidate wins. "{id}" expands to the case ID. URDFormer
 # falls back to the preserved full-batch archive.
