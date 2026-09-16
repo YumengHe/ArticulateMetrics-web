@@ -3276,22 +3276,29 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
 </style>
 
 <script>
-  // Scrollspy for the fixed contents rail.
+  // Scrollspy for the fixed contents rail. Positions are recomputed from
+  // getBoundingClientRect on every scroll: the results grids are filled by
+  // scripts and their images load lazily, so cached offsets go stale.
   (function () {
     var links = Array.prototype.slice.call(document.querySelectorAll('.side-nav a'));
     var targets = links.map(function (a) {
       return document.querySelector(a.getAttribute('href'));
     });
     function onScroll() {
-      var pos = window.scrollY + 130;
       var active = -1;
       for (var i = 0; i < targets.length; i++) {
-        if (targets[i] && targets[i].offsetTop <= pos) active = i;
+        if (targets[i] && targets[i].getBoundingClientRect().top <= 130) active = i;
+      }
+      // At the very bottom the last (short) section never crosses the 130px
+      // line, so pin the highlight to it once the page cannot scroll further.
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 2) {
+        active = targets.length - 1;
       }
       links.forEach(function (a, i) { a.classList.toggle('active', i === active); });
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('DOMContentLoaded', onScroll);
+    window.addEventListener('load', onScroll);
   })();
 </script>
 </body>
