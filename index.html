@@ -89,26 +89,29 @@
           <h2 class="title is-3">✨ Abstract ✨</h2>
           <div class="content has-text-justified">
             <p>
-              Methods that reconstruct simulation-ready articulated objects are evaluated by an
-              ad-hoc template of per-joint scores: an axis-direction error, a pivot error, a
-              categorical joint-type error, and, in the most complete protocols, a motion-limit
-              error, reported separately or thresholded into a success rate. We show this template
-              grades the representation rather than the motion it encodes. The pivot term divides by
-              the cross product of the two axes and so diverges precisely when predictions become
-              accurate; the type error is discontinuous at the fixed/revolute/prismatic boundaries
-              that are physically continuous; and where the limits are scored, they are folded back
-              onto the axis in a way that reintroduces the axis-sign ambiguity, so the same joint
-              written with a flipped axis and renamed limits scores maximally against itself and
-              unbounded joints cannot be scored at all. We propose a single metric on one-DOF joints
-              that removes each of these failures by construction: the quotient distance between the
-              unordered pair of Lie-algebra endpoint twists of the two joints. It is a true metric,
-              unifies fixed, revolute, prismatic, and helical joints, admits unbounded (continuous)
-              joints as limit points of a radial compactification, and, under the kinetic-energy
-              inner product of the moving link, equals the RMS physical displacement of that link's
-              material, turning the score into a motion discrepancy in meters. We lift the metric to
-              full kinematic trees with geometry, prove its metric axioms and its equivalence to
-              swept-motion discrepancy, and outline re-evaluation of published methods on
-              PartNet-Mobility under it.
+              Modern methods reconstruct or generate simulation-ready articulated objects,
+              predicting not only their geometry but also how their parts are connected and allowed
+              to move. Evaluating the geometry is straightforward, but evaluating the predicted
+              articulation is not, because articulation specifies a motion rather than a shape, and
+              there is no agreed distance between two motions. More specifically, existing protocols
+              score joint type, axis direction, origin, and motion limits separately, although these
+              parameters jointly describe a single physical motion, and the same motion can be
+              written as different parameter values. As a result, a joint can score maximally wrong
+              against an equivalent encoding of itself, and several component errors are
+              ill-conditioned or undefined exactly where predictions become accurate. We propose
+              <strong>ArticulateArena</strong>, a representation-invariant counterpart of Chamfer
+              distance for articulation that compares the motions one-DOF joints induce rather than
+              the parameters that encode them. It represents each joint by the unordered pair of its
+              Lie-algebra endpoint twists, and we prove that the resulting quotient distance is a
+              metric. It unifies fixed, revolute, prismatic, and helical joints, brings continuous
+              joints into the same score through a compactification, and reads as the RMS motion of
+              the moving part in meters when weighted by its mass distribution. A motion-aware tree
+              edit distance lifts the metric to full kinematic trees, pricing structural errors such
+              as spurious or missing joints in the same motion units as joint errors, and the metric
+              axioms hold at both levels. Alongside the metric we release
+              <strong>ArticulateArena-20K</strong>, a new suite of 19,650 articulated objects with
+              verified kinematics, and we re-evaluate published reconstruction methods on it under
+              the new metric.
             </p>
           </div>
         </div>
