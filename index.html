@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="ArticulateArena: a metric for articulated kinematics — a quotient metric on one-DOF joints via Lie-algebra endpoint twists, with object-level skeleton and tree-edit lifts.">
+  <meta name="description" content="ArticulateArena: a metric for articulated kinematics. A quotient metric on one-DOF joints via Lie-algebra endpoint twists, with object-level skeleton and tree-edit lifts.">
   <meta name="keywords" content="ArticulateArena, articulated objects, kinematics, metric, screw twist, se(3), joint estimation, URDF, benchmark">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ArticulateArena: A Metric for Articulated Kinematics</title>
@@ -85,8 +85,8 @@
     <div class="container is-max-desktop">
       <!-- Abstract. -->
       <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">✨ Abstract ✨</h2>
+        <div class="column">
+          <h2 class="title is-3">Abstract</h2>
           <div class="content has-text-justified">
             <p>
               Modern methods reconstruct or generate simulation-ready articulated objects,
@@ -118,7 +118,7 @@
       </div>
       <!-- Paper video -->
       <!-- <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
+        <div class="column">
           <div class="publication-video">
             <video controls autoplay muted loop playsinline style="width: 100%;">
               <source src="./video.mp4" type="video/mp4">
@@ -136,12 +136,12 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column">
-          <h2 class="title is-3">🔧 Types of Joints 🔧</h2>
+          <h2 class="title is-3">Types of Joints</h2>
           <div class="content has-text-justified">
             <p>
               Articulated objects move through a set of canonical joint types, each of which
               constrains how one part moves relative to another. Our metric covers the five
-              one-DOF types below — fixed, prismatic, revolute, continuous, and helical — shown
+              one-DOF types below (fixed, prismatic, revolute, continuous, and helical), shown
               with an example object, its kinematic tree (the highlighted node is the moving
               part), and the motion the joint allows.
             </p>
@@ -160,8 +160,8 @@
   <section class="section">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">🎞️ Demonstration of Errors 🎞️</h2>
+        <div class="column">
+          <h2 class="title is-3">Demonstration of Errors</h2>
           <div class="content has-text-justified">
             <p>
               The animations below illustrate different articulation errors against the
@@ -179,7 +179,7 @@
   <section class="section articulation-results-section" id="qualitative-results">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
+        <div class="column">
           <h2 class="title is-3">Qualitative Results</h2>
         </div>
       </div>
@@ -192,109 +192,35 @@
   <!-- Related Work Section -->
   <section class="section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3" style="text-align: center;">📚 Related Work 📚</h2>
-      <div class="content has-text-justified" style="max-width: 980px; margin: 0 auto 1.5rem auto;">
+      <h2 class="title is-3" style="text-align: center;">Related Work</h2>
+      <div class="content has-text-justified" style="margin: 0 auto 1.5rem auto;">
         <p>
-          Prior work on articulated 3D objects spans reconstruction, generation, and real-to-sim
-          modeling. Each line below lists a representative paper and the quantitative metrics it
-          uses to evaluate articulation quality.
+          Kinematic evaluation metrics reported by existing articulated-object reconstruction
+          methods. A check mark denotes a component the method scores, and <sup>†</sup> marks a
+          component scored for revolute joints only. A dash indicates that the method does not
+          directly evaluate the corresponding kinematic property. Geometry-only metrics such as
+          Chamfer distance and F-score are outside the scope of this table.
         </p>
       </div>
       <div class="related-work-container">
-        <table class="table is-bordered is-striped is-hoverable is-fullwidth related-work-table">
+        <table class="table protocols-table">
           <thead>
             <tr>
-              <th>Paper</th>
-              <th>Venue</th>
-              <th>Metrics Used</th>
+              <th>Method</th>
+              <th>Type</th>
+              <th>Axis</th>
+              <th>Origin</th>
+              <th>Limit</th>
+              <th>Success rate</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2605.15187" target="_blank" rel="noopener">Articraft</a></td>
-              <td>arXiv 2026</td>
-              <td>User study (prompt alignment &amp; overall quality); downstream Particulate metrics: gIoU, mIoU, part-wise Chamfer (PC), whole-object Chamfer (OC)</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2512.11798" target="_blank" rel="noopener">Particulate</a></td>
-              <td>CVPR 2026</td>
-              <td>gIoU; mIoU; part-wise Chamfer distance (PC); whole-object Chamfer distance (OC)</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2412.11596" target="_blank" rel="noopener">MeshArt</a></td>
-              <td>CVPR 2025</td>
-              <td>ID / AID; COV; MMD; 1-NNA; FID; KID</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2502.02590" target="_blank" rel="noopener">Articulate AnyMesh</a></td>
-              <td>arXiv 2025</td>
-              <td>Joint axis angular error; joint axis position error; manipulation success rate</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2410.16499" target="_blank" rel="noopener">SINGAPO</a></td>
-              <td>ICLR 2025</td>
-              <td>Chamfer Distance (dCD); generalized-IoU; centroid distance; AOR; ID / AID; graph-topology accuracy</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2406.08474" target="_blank" rel="noopener">Real2Code</a></td>
-              <td>ICLR 2025</td>
-              <td>Chamfer Distance (whole / part); joint axis rotation error; joint position error; joint type accuracy</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2410.13882" target="_blank" rel="noopener">Articulate-Anything</a></td>
-              <td>arXiv 2024</td>
-              <td>Link / joint prediction success rate; joint type, axis, and origin error; VLM realism rating</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2405.11656" target="_blank" rel="noopener">URDFormer</a></td>
-              <td>RSS 2024</td>
-              <td>Mesh accuracy; parent accuracy; spatial error; precision / recall / F1; manipulation success rate</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2312.09570" target="_blank" rel="noopener">CAGE</a></td>
-              <td>CVPR 2024</td>
-              <td>MMD / COV under ID and AID (Abstract Instantiation Distance); AOR (Average Overlapping Ratio); 1-NNA</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2305.16315" target="_blank" rel="noopener">NAP</a></td>
-              <td>NeurIPS 2023</td>
-              <td>Instantiation Distance (ID); MMD; COV; 1-NNA</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2308.07391" target="_blank" rel="noopener">PARIS</a></td>
-              <td>ICCV 2023</td>
-              <td>Chamfer Distance (whole / static / movable); axis angular error; axis position error; geodesic error (revolute); translation error (prismatic)</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2303.15782" target="_blank" rel="noopener">CARTO</a></td>
-              <td>CVPR 2023</td>
-              <td>Chamfer Distance; mAP @ 3D IoU25 / IoU50; mAP @ pose thresholds; joint type accuracy; joint state error</td>
-            </tr>
-            <tr>
-              <td><a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Liu_Building_Rearticulable_Models_for_Arbitrary_3D_Objects_From_4D_Point_CVPR_2023_paper.pdf" target="_blank" rel="noopener">Reart</a></td>
-              <td>CVPR 2023</td>
-              <td>Chamfer Distance / reconstruction error; Rand Index; Tree Edit Distance; scene-flow EPE (Acc5 / Acc10 / angle error); retargeting error</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2202.08227" target="_blank" rel="noopener">Ditto</a></td>
-              <td>CVPR 2022</td>
-              <td>Chamfer Distance (whole / mobile part); joint axis angular error; joint position error; joint type accuracy</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2112.11347" target="_blank" rel="noopener">Watch It Move</a></td>
-              <td>CVPR 2022</td>
-              <td>LPIPS; SSIM; MPJPE (mean per-joint position error)</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2104.07645" target="_blank" rel="noopener">A-SDF</a></td>
-              <td>ICCV 2021</td>
-              <td>Chamfer Distance; joint angle error</td>
-            </tr>
-            <tr>
-              <td><a href="https://arxiv.org/abs/2003.08515" target="_blank" rel="noopener">SAPIEN / PartNet-Mobility</a></td>
-              <td>CVPR 2020</td>
-              <td>mAP for movable-part segmentation; motion-axis alignment; joint pivot / position error; joint type classification</td>
-            </tr>
+            <tr><td>Ditto</td><td>–</td><td>✓</td><td>✓<sup>†</sup></td><td>–</td><td>–</td></tr>
+            <tr><td>PARIS</td><td>–</td><td>✓</td><td>✓<sup>†</sup></td><td>–</td><td>–</td></tr>
+            <tr><td>URDFormer</td><td>✓</td><td>✓</td><td>✓</td><td>–</td><td>–</td></tr>
+            <tr><td>Real2Code</td><td>✓</td><td>✓</td><td>✓<sup>†</sup></td><td>–</td><td>–</td></tr>
+            <tr><td>Articulate-Anything</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>SPARK</td><td>✓</td><td>✓</td><td>✓</td><td>–</td><td>–</td></tr>
           </tbody>
         </table>
       </div>
@@ -564,6 +490,30 @@
     }
 
     /* Related Work table: fit width, no horizontal scroll */
+    /* Paper Table 5 (tab:protocols) layout: booktabs rules, centered marks. */
+    .table.protocols-table {
+        max-width: 780px;
+        margin: 0 auto;
+        background: transparent;
+    }
+    .table.protocols-table th,
+    .table.protocols-table td {
+        border: none;
+        padding: 9px 16px;
+        vertical-align: middle;
+    }
+    .table.protocols-table thead th {
+        border-top: 2px solid #24292f;
+        border-bottom: 1px solid #24292f;
+        color: #24292f;
+    }
+    .table.protocols-table tbody tr:last-child td {
+        border-bottom: 2px solid #24292f;
+    }
+    .table.protocols-table th:not(:first-child),
+    .table.protocols-table td:not(:first-child) {
+        text-align: center;
+    }
     .related-work-container {
         margin: 0 auto;
         max-width: 980px;
@@ -1709,6 +1659,72 @@
           padding: 5px 10px;
       }
   }
+
+    /* ---- Visual refinement: warm academic palette shared with the docs page ---- */
+    :root {
+        --aa-paper: #fcfbf8;
+        --aa-ink: #1f1e1b;
+        --aa-ink2: #55524b;
+        --aa-hairline: #e3dfd6;
+        --aa-accent: #9a7422;
+        --aa-serif: Georgia, 'Times New Roman', serif;
+    }
+    html { background: var(--aa-paper); }
+    body {
+        background: var(--aa-paper);
+        color: var(--aa-ink);
+    }
+    .hero, .hero-body, .section { background: transparent; }
+    .publication-title {
+        font-family: var(--aa-serif);
+        font-weight: 600;
+        color: var(--aa-ink);
+        letter-spacing: -0.01em;
+    }
+    .publication-authors { color: var(--aa-ink2); }
+    .section .title.is-3 {
+        font-family: var(--aa-serif);
+        font-weight: 600;
+        color: var(--aa-ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1.6rem;
+    }
+    .section .title.is-3::after {
+        content: "";
+        width: 54px;
+        height: 3px;
+        border-radius: 2px;
+        background: var(--aa-accent);
+    }
+    .content p { color: var(--aa-ink); }
+    .publication-links .button.is-dark {
+        background: var(--aa-ink);
+        transition: background 0.2s ease;
+    }
+    .publication-links .button.is-dark:hover { background: var(--aa-accent); }
+    .error-demo-item {
+        border-color: var(--aa-hairline);
+        border-radius: 10px;
+        box-shadow: 0 1px 4px rgba(31, 30, 27, 0.06);
+    }
+    .error-demo-item:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 6px 18px rgba(31, 30, 27, 0.12);
+    }
+    .articulation-results-grid {
+        border-color: var(--aa-hairline);
+        background: var(--aa-hairline);
+        border-radius: 8px;
+    }
+    .articulation-results-header { color: var(--aa-ink); }
+    .articulation-results-label strong { color: var(--aa-ink); }
+    .table.protocols-table thead th,
+    .table.protocols-table tbody tr:last-child td { border-color: var(--aa-ink); }
+    .table.protocols-table { background: transparent; }
+    .table.protocols-table td, .table.protocols-table th { background: transparent; }
 </style>
 
 <!-- Demonstration of Errors data (loaded as a global so it also works when opening index.html directly via file://) -->
