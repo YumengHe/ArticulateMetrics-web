@@ -332,16 +332,21 @@
         <h2><span class="sec-no">1</span>Overview</h2>
         <p>
           <code>articulatearena</code> implements a principled distance between articulated-kinematics
-          predictions and ground truth. A one-DOF joint <span class="math">J</span> with unit screw twist
-          <span class="math">ξ̂ ∈ se(3)</span> and limits <span class="math">[a, b]</span> is represented by its
-          unordered <em>endpoint pair</em> <span class="math">{a·ξ̂, b·ξ̂}</span>; the joint metric is the
-          quotient distance
+          predictions and ground truth. A one-DOF joint
+          <span class="math">J = (ξ, [l⁻, l⁺])</span> with unit screw twist <span class="math">ξ ∈ se(3)</span>
+          and limits <span class="math">l⁻, l⁺</span> is represented by its unordered pair of
+          <em>endpoint twists</em> <span class="math">{z⁻, z⁺} = {l⁻ξ, l⁺ξ}</span>; the joint metric is the
+          quotient distance of flat <span class="math">se(3) × se(3)</span> under the swap:
         </p>
         <p class="display-math">
-          E(J₁, J₂) = min over the ℤ₂ swap of ( ‖u₁ − u₂‖ + ‖v₁ − v₂‖ ),
+          E(J₁, J₂) = min{ ‖z₁⁻ − z₂⁻‖² + ‖z₁⁺ − z₂⁺‖²,&ensp;‖z₁⁻ − z₂⁺‖² + ‖z₁⁺ − z₂⁻‖² }<sup>1/2</sup>,
         </p>
         <p>
-          where <span class="math">‖·‖</span> is an injected <span class="math">se(3)</span> norm. The package
+          where <span class="math">‖·‖</span> is an injected <span class="math">se(3)</span> norm. A subscript
+          names that choice — <span class="math">E<sub>α</sub></span> under the split norm,
+          <span class="math">E<sub>B</sub></span> under the kinetic-energy norm — and superscripts mark the
+          extensions <span class="math">E<sup>φ</sup></span> (compactified) and
+          <span class="math">E<sup>tree</sup></span> (tree lift). The package
           provides the metric itself, a smooth training surrogate, the radial compactification that extends the
           metric continuously to unbounded (continuous) joints, and two object-level lifts: an optimal-assignment
           skeleton distance and a motion-aware tree edit distance with a certified assignment relaxation.
@@ -397,7 +402,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
         <h3 id="concept-endpoint">4.1&ensp;Endpoint pairs and the metric E</h3>
         <p>
           A joint is identified with the unordered pair of its endpoint twists
-          <span class="math">u = a·ξ̂</span>, <span class="math">v = b·ξ̂</span>. Because the pair is unordered,
+          <span class="math">{z⁻, z⁺} = {l⁻ξ, l⁺ξ}</span>. Because the pair is unordered,
           <code>joint_metric</code> takes the minimum over the two pairings — this is the quotient by the
           ℤ₂ swap and what makes <span class="math">E</span> well defined on joints rather than on labeled
           endpoint tuples. The hard <span class="math">min</span> is non-differentiable on its tie locus, so
@@ -412,35 +417,56 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           <thead><tr><th>Constructor</th><th>Norm</th></tr></thead>
           <tbody>
             <tr><td><code>make_split_norm(alpha)</code></td>
-              <td>‖ω‖² + α²‖ν‖², the dimensionless benchmark default (α is a characteristic inverse length;
-                set it to match your units).</td></tr>
+              <td><span class="math">‖Δz‖<sub>α</sub>² = ‖Δω‖² + α²‖Δv‖²</span> — dimensionless; the resulting
+                <span class="math">E<sub>α</sub></span> compares every joint by one fixed rule
+                (α is an inverse length; set it to match your units).</td></tr>
             <tr><td><code>make_kinetic_energy_norm(inertia)</code></td>
-              <td>ξᵀ M ξ from a child link's <code>LinkInertia</code> (mass, center of mass, rotational
-                inertia); values carry physical units.</td></tr>
+              <td><span class="math">‖Δz‖<sub>B</sub>² = (1/m) Δωᵀ I Δω + ‖Δv + Δω × c‖²</span> from the child
+                link's <code>LinkInertia</code> (mass m, center of mass c, inertia I); the resulting
+                <span class="math">E<sub>B</sub></span> is measured in meters and equals the RMS linearized
+                material motion of the link.</td></tr>
             <tr><td><code>make_riemannian_norm(metric)</code></td>
-              <td>ξᵀ G ξ for an arbitrary user-supplied symmetric positive-definite 6×6 matrix G.</td></tr>
+              <td><span class="math">Δzᵀ G Δz</span> for an arbitrary user-supplied symmetric positive-definite
+                6×6 matrix <span class="math">G</span>.</td></tr>
           </tbody>
         </table>
 
         <h3 id="concept-compact">4.3&ensp;Continuous joints and the compactification E∘φ</h3>
         <p>
-          A continuous joint has unbounded limits, so its endpoint twists escape to infinity.
-          <code>radial_compactify</code> applies the radial map
-          <span class="math">φ(ξ) = tanh(‖ξ‖/κ)·ξ/‖ξ‖</span>, which carries all twists into the open unit ball
-          and continuous joints to points on its boundary; <code>compactified_joint_metric</code> evaluates
-          <span class="math">E∘φ</span> there. This composition is continuous as a bounded joint's range grows
-          toward the continuous limit, so bounded and continuous joints are compared on one compact space.
-          The benchmark uses <span class="math">κ = π</span>. <code>interval_term</code> supplies the
-          extended-real comparison of the limit intervals themselves.
+          A continuous joint has unbounded limits (<span class="math">l<sup>±</sup> = ±∞</span>), so its endpoint
+          twists escape to infinity. <code>radial_compactify</code> maps <span class="math">se(3)</span> into its
+          unit ball by radial compactification, and <code>compactified_joint_metric</code> measures the quotient
+          distance there:
+        </p>
+        <p class="display-math">
+          φ(z) = tanh(‖z‖/κ) z/‖z‖,&emsp;
+          E<sup>φ</sup>(J₁, J₂) = E({φ(z₁⁻), φ(z₁⁺)}, {φ(z₂⁻), φ(z₂⁺)}).
+        </p>
+        <p>
+          A continuous joint becomes the antipodal boundary pair <span class="math">{±ξ}</span> — the axis
+          direction up to sign — and <span class="math">E<sup>φ</sup></span> is continuous as a bounded joint's
+          limits grow toward the continuous limit, so bounded and continuous joints are compared on one compact
+          space in a single dimensionless score. The benchmark uses <span class="math">κ = π</span>.
+          <code>interval_term</code> supplies the extended-real comparison of the limit intervals themselves.
         </p>
 
         <h3 id="concept-tree">4.4&ensp;The tree metric</h3>
         <p>
-          At object level a kinematic tree has links for nodes and one-DOF joints for edges. The tree metric
-          <span class="math">E<sup>tree</sup></span> is an edit distance: substituting the joint on an edge costs
-          <span class="math">E(J, J′)</span>, and contracting or expanding an edge costs
-          <span class="math">E(J, J₀)</span> — the motion the joint carries — where
-          <span class="math">J₀</span> is the fixed joint. Exactly-fixed edges are contracted first
+          At object level a kinematic tree has links for nodes and one-DOF joints for edges. The fixed joint
+          <span class="math">J₀ = {0, 0}</span> is a canonical origin, and <span class="math">E(J, J₀)</span>
+          measures how much motion a joint carries. The tree metric is an edit distance whose every cost comes
+          from <span class="math">E</span> itself: an edit <em>substitutes</em> the joint on an edge at cost
+          <span class="math">E(J, J′)</span>, <em>contracts</em> an edge by merging its two links at cost
+          <span class="math">E(J, J₀)</span>, or <em>expands</em> a link into two joined by a new joint at the
+          same cost, and
+        </p>
+        <p class="display-math">
+          E<sup>tree</sup>(T₁, T₂) = inf<sub>π : T₁ ⇝ T₂</sub> Σ<sub>o ∈ π</sub> c(o)
+        </p>
+        <p>
+          over finite edit sequences <span class="math">π</span> on unrooted trees with unlabeled nodes. No
+          hand-set topology penalty appears: a nearly welded extra handle is charged
+          <span class="math">ε‖ξ‖</span> rather than a constant. Exactly-fixed edges are contracted first
           (<code>contract_small_edges</code>); they are representation noise, not structure.
         </p>
         <p>Two computations are provided:</p>
@@ -474,7 +500,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
       <section id="api">
         <h2><span class="sec-no">5</span>API reference</h2>
         <p>Public functions and classes, by module. All array arguments are NumPy <code>float64</code>;
-          twists are shape (6,) in the convention (ω; ν).</p>
+          twists are shape (6,) in the paper's convention <span class="math">ξ = (ω, v)</span>.</p>
 
         <h3>Types — <code>articulatearena.types</code></h3>
         <table>
@@ -493,7 +519,8 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
             <tr><td><code>screw_twist(axis_dir, point, joint_type, pitch=0)</code></td>
               <td>Unit screw twist of a one-DOF joint from a world-frame axis and a point on it.</td></tr>
             <tr><td><code>make_endpoint_pair(xi_hat, a, b)</code></td>
-              <td>The unordered endpoint pair <span class="math">{a·ξ̂, b·ξ̂}</span>.</td></tr>
+              <td>The unordered endpoint pair <span class="math">{a·ξ, b·ξ}</span> (code names the limits
+                <code>a</code>, <code>b</code> = paper's <span class="math">l⁻, l⁺</span>).</td></tr>
             <tr><td><code>joint_to_endpoint_pair(joint)</code></td>
               <td>Endpoint pair of a typed <code>Joint</code>.</td></tr>
           </tbody>
@@ -512,7 +539,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
         <h3>Norms — <code>new_equation.inner_product</code></h3>
         <table>
           <tbody>
-            <tr><td><code>make_split_norm(alpha)</code></td><td>Split norm ‖ω‖² + α²‖ν‖².</td></tr>
+            <tr><td><code>make_split_norm(alpha)</code></td><td>Split norm <span class="math">‖Δω‖² + α²‖Δv‖²</span>.</td></tr>
             <tr><td><code>make_kinetic_energy_norm(inertia)</code></td><td>Kinetic-energy norm from a <code>LinkInertia</code>.</td></tr>
             <tr><td><code>make_riemannian_norm(metric)</code></td><td>Norm from a user-supplied SPD 6×6 matrix.</td></tr>
           </tbody>
