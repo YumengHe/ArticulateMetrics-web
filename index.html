@@ -29,7 +29,34 @@
 </head>
 
 <body>
-  <section class="hero">
+
+  <aside class="side-toc">
+    <a class="side-brand" href="#top">
+      <img src="./static/images/articulatemetrics-icon.svg" alt="">
+      <span>Articulate Metrics</span>
+    </a>
+    <p class="side-label">Project</p>
+    <nav class="side-nav">
+      <a href="#abstract">Abstract</a>
+      <a href="#joint-types">Types of Joints</a>
+      <a href="#error-demos">Demonstration of Errors</a>
+      <a href="#qualitative-results">Qualitative Results</a>
+      <a href="#related-work">Related Work</a>
+    </nav>
+    <p class="side-label">Documentation</p>
+    <nav class="side-nav">
+      <a href="#overview">Overview</a>
+      <a href="#installation">Installation</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="#concepts">Core concepts</a>
+      <a href="#api">API reference</a>
+      <a href="#cli">Command-line usage</a>
+      <a href="#layout">Package layout</a>
+      <a href="#citation">Citation</a>
+    </nav>
+  </aside>
+
+  <section class="hero" id="top">
     <div class="hero-body">
       <div class="container is-max-desktop">
         <div class="columns is-centered">
@@ -46,15 +73,6 @@
               </span>
             </div>
 
-            <!-- Links -->
-            <div class="publication-links" style="margin-top: 1rem;">
-              <span class="link-block">
-                <a href="./docs.html" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fa fa-book"></i></span>
-                  <span>Documentation</span>
-                </a>
-              </span>
-            </div>
 
           </div>
         </div>
@@ -91,7 +109,7 @@
       </div>
     </section> -->
   
-  <section class="section">
+  <section class="section" id="abstract">
     <div class="container is-max-desktop">
       <!-- Abstract. -->
       <div class="columns is-centered has-text-centered">
@@ -139,7 +157,7 @@
   </section>
 
   <!-- Types of Joints Section -->
-  <section class="section">
+  <section class="section" id="joint-types">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column">
@@ -417,7 +435,7 @@
   </section>
 
   <!-- Demonstration of Errors Section -->
-  <section class="section">
+  <section class="section" id="error-demos">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
@@ -450,7 +468,7 @@
   </section>
 
   <!-- Related Work Section -->
-  <section class="section">
+  <section class="section" id="related-work">
     <div class="container is-max-desktop">
       <h2 class="title is-3" style="text-align: center;">📚 Related Work 📚</h2>
       <div class="content has-text-justified" style="max-width: 980px; margin: 0 auto 1.5rem auto;">
@@ -557,6 +575,337 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="documentation">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3" style="text-align: center;">📖 Documentation 📖</h2>
+      <p class="docs-lede">Usage documentation for <code>articulatearena</code>, the reference
+        implementation of the quotient metric <span class="math">E</span> on one-degree-of-freedom
+        articulated joints and its object-level lifts.</p>
+      <div class="docs-body">
+      <section id="overview">
+        <h2><span class="sec-no">1</span>Overview</h2>
+        <p>
+          <code>articulatearena</code> implements a principled distance between articulated-kinematics
+          predictions and ground truth. A one-DOF joint <span class="math">J</span> with unit screw twist
+          <span class="math">ξ̂ ∈ se(3)</span> and limits <span class="math">[a, b]</span> is represented by its
+          unordered <em>endpoint pair</em> <span class="math">{a·ξ̂, b·ξ̂}</span>; the joint metric is the
+          quotient distance
+        </p>
+        <p class="display-math">
+          E(J₁, J₂) = min over the ℤ₂ swap of ( ‖u₁ − u₂‖ + ‖v₁ − v₂‖ ),
+        </p>
+        <p>
+          where <span class="math">‖·‖</span> is an injected <span class="math">se(3)</span> norm. The package
+          provides the metric itself, a smooth training surrogate, the radial compactification that extends the
+          metric continuously to unbounded (continuous) joints, and two object-level lifts: an optimal-assignment
+          skeleton distance and a motion-aware tree edit distance with a certified assignment relaxation.
+        </p>
+        <p>
+          All functions are pure: norms, weights, and tolerances are passed in by the caller and never hardcoded.
+          The library depends only on <code>numpy</code>, <code>scipy</code>, and <code>pyyaml</code>.
+        </p>
+      </section>
+
+      <section id="installation">
+        <h2><span class="sec-no">2</span>Installation</h2>
+        <p>The package lives in <code>src/articulatearena/</code> of the
+          <a href="https://github.com/YumengHe/ArticulateMetrics">ArticulateMetrics</a> repository and follows the
+          standard <em>src</em> layout. From the repository root:</p>
+<pre><code><span class="pr">$</span> conda create -n articulatemetrics python=3.10 -y
+<span class="pr">$</span> conda activate articulatemetrics
+<span class="pr">$</span> pip install -e .</code></pre>
+        <p>An editable install registers the import name <code>articulatearena</code>; the repository scripts also
+          run without installation, as they place <code>src/</code> on <code>sys.path</code> themselves.
+          Python ≥ 3.10 is required.</p>
+      </section>
+
+      <section id="quickstart">
+        <h2><span class="sec-no">3</span>Quickstart</h2>
+        <p>Build endpoint pairs for two joints, choose an <span class="math">se(3)</span> norm, and evaluate
+          <code>joint_metric</code>. The distance is <code>0</code> exactly when the two joints induce the same
+          motion:</p>
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> articulatearena.new_equation.representation <span class="kw">import</span> make_endpoint_pair
+<span class="kw">from</span> articulatearena.new_equation.inner_product <span class="kw">import</span> make_split_norm
+<span class="kw">from</span> articulatearena.new_equation.E <span class="kw">import</span> joint_metric
+
+xi = np.array([0., 0., 1., 0., 0., 0.])   <span class="cm"># unit screw axis (omega; nu)</span>
+gt   = make_endpoint_pair(xi, 0.0, 1.0)    <span class="cm"># joint limits [a, b]</span>
+pred = make_endpoint_pair(xi, 0.0, 1.0)
+
+norm = make_split_norm(alpha=1.0)          <span class="cm"># the norm is injected, never hardcoded</span>
+E = joint_metric(gt.u.data, gt.v.data, pred.u.data, pred.v.data, norm)
+print(E)   <span class="cm"># 0.0 when prediction == ground truth</span></code></pre>
+        <p>To score real URDF joints, load them through the reader layer instead of constructing twists by
+          hand:</p>
+<pre><code><span class="kw">from</span> articulatearena.read.urdf_loader <span class="kw">import</span> load_joint
+<span class="kw">from</span> articulatearena.new_equation.representation <span class="kw">import</span> joint_to_endpoint_pair
+
+joint = load_joint(<span class="st">"sample_data/45168/mobility.urdf"</span>, <span class="st">"joint_0"</span>)
+pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b*xi}</span></code></pre>
+      </section>
+
+      <section id="concepts">
+        <h2><span class="sec-no">4</span>Core concepts</h2>
+
+        <h3 id="concept-endpoint">4.1&ensp;Endpoint pairs and the metric E</h3>
+        <p>
+          A joint is identified with the unordered pair of its endpoint twists
+          <span class="math">u = a·ξ̂</span>, <span class="math">v = b·ξ̂</span>. Because the pair is unordered,
+          <code>joint_metric</code> takes the minimum over the two pairings — this is the quotient by the
+          ℤ₂ swap and what makes <span class="math">E</span> well defined on joints rather than on labeled
+          endpoint tuples. The hard <span class="math">min</span> is non-differentiable on its tie locus, so
+          <code>training_loss</code> provides a smooth, swap-invariant surrogate for
+          <span class="math">E²</span> suitable as a learning objective.
+        </p>
+
+        <h3 id="concept-norms">4.2&ensp;Injected se(3) norms</h3>
+        <p>Every metric function takes an <code>InnerProduct</code> — a callable mapping a shape-(6,) twist to
+          its squared norm. Three constructors are provided:</p>
+        <table>
+          <thead><tr><th>Constructor</th><th>Norm</th></tr></thead>
+          <tbody>
+            <tr><td><code>make_split_norm(alpha)</code></td>
+              <td>‖ω‖² + α²‖ν‖², the dimensionless benchmark default (α is a characteristic inverse length;
+                set it to match your units).</td></tr>
+            <tr><td><code>make_kinetic_energy_norm(inertia)</code></td>
+              <td>ξᵀ M ξ from a child link's <code>LinkInertia</code> (mass, center of mass, rotational
+                inertia); values carry physical units.</td></tr>
+            <tr><td><code>make_riemannian_norm(metric)</code></td>
+              <td>ξᵀ G ξ for an arbitrary user-supplied symmetric positive-definite 6×6 matrix G.</td></tr>
+          </tbody>
+        </table>
+
+        <h3 id="concept-compact">4.3&ensp;Continuous joints and the compactification E∘φ</h3>
+        <p>
+          A continuous joint has unbounded limits, so its endpoint twists escape to infinity.
+          <code>radial_compactify</code> applies the radial map
+          <span class="math">φ(ξ) = tanh(‖ξ‖/κ)·ξ/‖ξ‖</span>, which carries all twists into the open unit ball
+          and continuous joints to points on its boundary; <code>compactified_joint_metric</code> evaluates
+          <span class="math">E∘φ</span> there. This composition is continuous as a bounded joint's range grows
+          toward the continuous limit, so bounded and continuous joints are compared on one compact space.
+          The benchmark uses <span class="math">κ = π</span>. <code>interval_term</code> supplies the
+          extended-real comparison of the limit intervals themselves.
+        </p>
+
+        <h3 id="concept-tree">4.4&ensp;The tree metric</h3>
+        <p>
+          At object level a kinematic tree has links for nodes and one-DOF joints for edges. The tree metric
+          <span class="math">E<sup>tree</sup></span> is an edit distance: substituting the joint on an edge costs
+          <span class="math">E(J, J′)</span>, and contracting or expanding an edge costs
+          <span class="math">E(J, J₀)</span> — the motion the joint carries — where
+          <span class="math">J₀</span> is the fixed joint. Exactly-fixed edges are contracted first
+          (<code>contract_small_edges</code>); they are representation noise, not structure.
+        </p>
+        <p>Two computations are provided:</p>
+        <table>
+          <thead><tr><th>Function</th><th>Semantics</th></tr></thead>
+          <tbody>
+            <tr><td><code>assignment_tree_distance</code></td>
+              <td>The assignment <em>relaxation</em>: a Hungarian matching over the joint multisets with
+                <span class="math">E(J, J₀)</span> as the unmatched cost. Polynomial for any input; a certified
+                lower bound of the exact distance; needs no tree topology from the prediction.</td></tr>
+            <tr><td><code>exact_tree_distance</code></td>
+              <td>The <em>exact</em> edit distance: the minimum over matchings that extend to an isomorphism of
+                the contracted trees. Returns <code>(distance, certified)</code>; when the relaxation's own
+                optimal matching is realizable (checked in linear time by <code>matching_realizable</code>),
+                exactness is certified without any search.</td></tr>
+          </tbody>
+        </table>
+        <p class="note">
+          Unordered tree edit distance is NP-hard for general trees, which is why the benchmark protocol is
+          stated with the relaxation. At benchmark scale (2–8 movable joints) the exact distance is cheap: the
+          certificate settles ≈ 91 % of corrupted predictions, the two quantities agree on ≈ 92 % of them
+          (rank agreement τ = 0.994), and they agree exactly on every structured sweep.
+        </p>
+        <p>
+          A simpler object-level alternative, <code>skeleton_distance</code>, adds a constant topology penalty
+          λ per unmatched joint on top of the assigned <span class="math">E</span> cost; it is retained for
+          comparison with prior hard-penalty protocols.
+        </p>
+      </section>
+
+      <section id="api">
+        <h2><span class="sec-no">5</span>API reference</h2>
+        <p>Public functions and classes, by module. All array arguments are NumPy <code>float64</code>;
+          twists are shape (6,) in the convention (ω; ν).</p>
+
+        <h3>Types — <code>articulatearena.types</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>Twist</code></td><td>Immutable shape-(6,) twist wrapper; raw array via <code>.data</code>.</td></tr>
+            <tr><td><code>EndpointPair</code></td><td>Unordered pair <code>{u, v}</code> of endpoint twists.</td></tr>
+            <tr><td><code>Joint</code></td><td>Unit screw twist <code>xi_hat</code>, limits <code>a</code>, <code>b</code> (±inf for continuous), and <code>joint_type</code>.</td></tr>
+            <tr><td><code>LinkInertia</code></td><td>Mass, center of mass, and 3×3 rotational inertia of a link.</td></tr>
+            <tr><td><code>InnerProduct</code></td><td>Protocol: callable from a shape-(6,) twist to its squared norm.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Representation — <code>new_equation.representation</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>screw_twist(axis_dir, point, joint_type, pitch=0)</code></td>
+              <td>Unit screw twist of a one-DOF joint from a world-frame axis and a point on it.</td></tr>
+            <tr><td><code>make_endpoint_pair(xi_hat, a, b)</code></td>
+              <td>The unordered endpoint pair <span class="math">{a·ξ̂, b·ξ̂}</span>.</td></tr>
+            <tr><td><code>joint_to_endpoint_pair(joint)</code></td>
+              <td>Endpoint pair of a typed <code>Joint</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Joint metric — <code>new_equation.E</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>joint_metric(u1, v1, u2, v2, inner_product)</code></td>
+              <td>The quotient metric <span class="math">E</span>; ℤ₂-swap minimum over endpoint pairings.</td></tr>
+            <tr><td><code>training_loss(u1, v1, u2, v2, inner_product, epsilon=1e-9)</code></td>
+              <td>Smooth swap-invariant surrogate for <span class="math">E²</span> (differentiable objective).</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Norms — <code>new_equation.inner_product</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>make_split_norm(alpha)</code></td><td>Split norm ‖ω‖² + α²‖ν‖².</td></tr>
+            <tr><td><code>make_kinetic_energy_norm(inertia)</code></td><td>Kinetic-energy norm from a <code>LinkInertia</code>.</td></tr>
+            <tr><td><code>make_riemannian_norm(metric)</code></td><td>Norm from a user-supplied SPD 6×6 matrix.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Continuous joints — <code>new_equation.continuous</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>radial_compactify(xi, inner_product, kappa)</code></td><td>Radial map φ into the open unit ball.</td></tr>
+            <tr><td><code>continuous_joint_repr(xi_hat, inner_product, kappa)</code></td><td>Boundary endpoint pair of an unbounded joint.</td></tr>
+            <tr><td><code>compactified_joint_metric(u1, v1, u2, v2, inner_product, kappa)</code></td><td><span class="math">E∘φ</span>, the compactified metric.</td></tr>
+            <tr><td><code>interval_term(a1, a2)</code></td><td>Extended-real distance between limit values.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Tree metric — <code>new_equation.tree</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>cost_to_fixed(pair, inner_product)</code></td><td>Contraction/expansion cost <span class="math">E(J, J₀)</span>.</td></tr>
+            <tr><td><code>assignment_tree_distance(pairs1, pairs2, inner_product, unmatched_cost=None)</code></td>
+              <td>Assignment relaxation over joint multisets (Hungarian, padded matrix).</td></tr>
+            <tr><td><code>contract_small_edges(edges, inner_product, tol=1e-12)</code></td>
+              <td>Contract exactly-fixed (zero-motion) edges of a labeled tree.</td></tr>
+            <tr><td><code>assignment_matching(pairs1, pairs2, inner_product)</code></td>
+              <td>Relaxation value together with its optimal matching.</td></tr>
+            <tr><td><code>matching_realizable(edges1, edges2, matching)</code></td>
+              <td>Linear-time check that a matching extends to an isomorphism of the contracted trees.</td></tr>
+            <tr><td><code>exact_tree_distance(edges1, edges2, inner_product)</code></td>
+              <td>Exact motion-aware tree edit distance; returns <code>(distance, certified)</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Skeleton distance — <code>new_equation.skeleton</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>topology_penalty(num_unmatched, num_relation_mismatches, lambda_topology, relation_weight=1)</code></td>
+              <td>Constant-λ penalty for surplus joints and relation mismatches.</td></tr>
+            <tr><td><code>skeleton_distance(cost_matrix, lambda_topology, ...)</code></td>
+              <td>Assigned <span class="math">E</span> cost plus topology penalty; returns <code>(row_ind, col_ind, total)</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Material motion — <code>new_equation.material_motion</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>se3_exp(xi_hat, theta)</code></td><td>Rigid transform exp(θ ξ̂).</td></tr>
+            <tr><td><code>config_discrepancy(...)</code>, <code>finite_joint_discrepancy(...)</code></td>
+              <td>RMS displacement discrepancy of material points swept along two joints (used to calibrate <span class="math">E</span> against physical motion).</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Background math — <code>general_equation</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>exp_map.exp_map(xi_hat, q=1)</code></td><td>se(3) exponential map.</td></tr>
+            <tr><td><code>assignment.assign(cost_matrix)</code></td><td>Hungarian optimal assignment.</td></tr>
+            <tr><td><code>tree_edit.tree_edit_distance(...)</code></td><td>Classical ordered tree edit distance (Zhang–Shasha) on <code>TreeNode</code>s.</td></tr>
+            <tr><td><code>configuration.configuration_difference(...)</code></td><td>L² configuration difference (Park 1995).</td></tr>
+          </tbody>
+        </table>
+
+        <h3>I/O — <code>read</code> and <code>write</code></h3>
+        <table>
+          <tbody>
+            <tr><td><code>read.config_loader.load_config(path=None)</code></td>
+              <td>Flatten a grouped YAML config into the <code>Config</code> dataclass; defaults to <code>configs/default.yaml</code>.</td></tr>
+            <tr><td><code>read.urdf_loader.load_joint(urdf_path, joint_name)</code></td>
+              <td>Typed <code>Joint</code> from a URDF, with the axis resolved to the world frame by forward kinematics.</td></tr>
+            <tr><td><code>read.inertia_loader.load_link_inertia</code>, <code>load_joint_child_inertia</code></td>
+              <td><code>LinkInertia</code> of a link / of a joint's child link, for the kinetic-energy norm.</td></tr>
+            <tr><td><code>read.case_loader.load_case</code>, <code>load_case_joints</code></td>
+              <td>Prediction/ground-truth evaluation case referencing two URDF joints.</td></tr>
+            <tr><td><code>write.report.Report_Generator</code></td>
+              <td>JSON / Markdown evaluation reports.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Baselines — <code>previous_metrics.component_scores</code></h3>
+        <p>Component scores of prior evaluation templates (type, axis, origin, and limit errors with thresholded
+          <code>joint_success</code>), kept for reproducing §3-style baseline numbers.</p>
+      </section>
+
+      <section id="cli">
+        <h2><span class="sec-no">6</span>Command-line usage</h2>
+        <p>The repository entry point evaluates a prediction/ground-truth case end to end — load the config, run
+          the pure metric functions, and write a report:</p>
+<pre><code><span class="pr">$</span> python scripts/run.py --config configs/default.yaml
+<span class="cm"># → Report written to out/metrics_report.json</span></code></pre>
+        <p><code>configs/default.yaml</code> groups the knobs that the paper treats as caller-supplied:</p>
+        <table>
+          <thead><tr><th>Group</th><th>Keys</th></tr></thead>
+          <tbody>
+            <tr><td><code>inner_product</code></td><td><code>form</code> (split / kinetic / riemannian), <code>split_norm_alpha</code>, <code>riemannian_metric</code>.</td></tr>
+            <tr><td><code>compactification</code></td><td><code>kappa</code> (benchmark: π), <code>phi_at_zero</code>.</td></tr>
+            <tr><td><code>skeleton</code></td><td><code>lambda_topology</code>, <code>topology_penalty</code>, <code>tree_edit_distance</code>.</td></tr>
+            <tr><td><code>aggregation</code>, <code>geometry</code></td><td>Aggregation form, smoothing ε, geometric weighting.</td></tr>
+            <tr><td><code>prediction</code>, <code>ground_truth</code></td><td>URDF path + joint name of each side of the case.</td></tr>
+          </tbody>
+        </table>
+        <p>Auxiliary scripts: <code>scripts/generate_error_cases.py</code> synthesizes controlled error cases from
+          a URDF; <code>scripts/run_previous_metrics.py</code> scores the same cases with the baseline component
+          metrics; <code>examples/run_real_cases.py</code> evaluates real PartNet-Mobility objects.</p>
+      </section>
+
+      <section id="layout">
+        <h2><span class="sec-no">7</span>Package layout</h2>
+<pre><code>src/articulatearena/
+  types.py            <span class="cm"># Twist, EndpointPair, Joint, LinkInertia, InnerProduct</span>
+  config.py           <span class="cm"># flat Config dataclass</span>
+  validation.py       <span class="cm"># shape / finiteness / positive-definite checks</span>
+  new_equation/       <span class="cm"># the paper's formulas</span>
+    representation.py <span class="cm">#   screw twist, endpoint pairs</span>
+    E.py              <span class="cm">#   joint_metric + training_loss</span>
+    inner_product.py  <span class="cm">#   split / kinetic-energy / Riemannian norms</span>
+    continuous.py     <span class="cm">#   compactification, E∘φ, interval term</span>
+    tree.py           <span class="cm">#   tree metric: relaxation + exact edit distance</span>
+    skeleton.py       <span class="cm">#   constant-λ topology penalty (baseline lift)</span>
+    material_motion.py<span class="cm">#   physical-motion discrepancy (calibration)</span>
+  general_equation/   <span class="cm"># standard background math</span>
+  previous_metrics/   <span class="cm"># §3 baseline component scores</span>
+  read/               <span class="cm"># YAML config, URDF, inertia, case loaders</span>
+  write/              <span class="cm"># JSON / Markdown reports</span></code></pre>
+      </section>
+
+      <section id="citation">
+        <h2><span class="sec-no">8</span>Citation</h2>
+        <p>If you use <code>articulatearena</code> in academic work, please cite the paper:</p>
+<pre><code>@inproceedings{articulatemetrics2026,
+  title     = {A Quotient Metric on Articulated Kinematics
+               via Lie-Algebra Endpoint Twists},
+  author    = {Anonymous},
+  booktitle = {Under review},
+  year      = {2026}
+}</code></pre>
+      </section>
       </div>
     </div>
   </section>
@@ -2732,6 +3081,218 @@
       });
   }
   window.addEventListener('DOMContentLoaded', setupLightbox);
+</script>
+
+<style>
+  /* ===================== merged wiki layout: sidebar + docs ===================== */
+  :root {
+    --aa-panel: #f5f3ee;
+    --aa-ink: #1f1e1b;
+    --aa-ink-2: #55524b;
+    --aa-ink-3: #8a867d;
+    --aa-hairline: #e3dfd6;
+    --aa-accent: #9a7422;
+    --aa-accent-soft: #f0e7d4;
+    --aa-code-bg: #f4f2ec;
+    --aa-code-border: #e6e2d8;
+    --aa-serif: Georgia, 'Times New Roman', serif;
+    --aa-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+    --aa-sidebar-w: 252px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  /* ---------- fixed left contents rail ---------- */
+  .side-toc {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--aa-sidebar-w);
+    padding: 1.9rem 1.4rem 2rem 1.7rem;
+    background: var(--aa-panel);
+    border-right: 1px solid var(--aa-hairline);
+    overflow-y: auto;
+    z-index: 30;
+  }
+
+  @media (min-width: 1150px) {
+    body { padding-left: var(--aa-sidebar-w); }
+    .side-toc { display: block; }
+  }
+
+  .side-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--aa-ink);
+    font-family: 'Google Sans', 'Noto Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .side-brand:hover { color: var(--aa-accent); }
+  .side-brand img { width: 28px; height: 28px; flex: none; }
+
+  .side-label {
+    margin: 1.7rem 0 0.45rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--aa-ink-3);
+  }
+
+  .side-nav { border-left: 1px solid var(--aa-hairline); }
+
+  .side-nav a {
+    display: block;
+    padding: 0.28rem 0 0.28rem 0.85rem;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    color: var(--aa-ink-2);
+    font-size: 0.84rem;
+    line-height: 1.35;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .side-nav a:hover { color: var(--aa-ink); }
+  .side-nav a.active {
+    color: var(--aa-accent);
+    border-left-color: var(--aa-accent);
+    font-weight: 600;
+  }
+
+  /* ---------- documentation body (ported from the former docs page) ---------- */
+  .docs-lede {
+    font-family: var(--aa-serif);
+    font-style: italic;
+    color: var(--aa-ink-2);
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 1.4rem;
+  }
+
+  .docs-body {
+    max-width: 780px;
+    margin: 0 auto;
+    color: var(--aa-ink);
+    font-size: 16px;
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  .docs-body section { padding-top: 0.6rem; }
+
+  .docs-body h2, .docs-body h3 { font-family: var(--aa-serif); font-weight: 600; line-height: 1.25; color: var(--aa-ink); }
+  .docs-body h2 {
+    font-size: 1.5rem;
+    margin: 2.2rem 0 0.9rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--aa-hairline);
+  }
+  .docs-body h2 .sec-no {
+    color: var(--aa-ink-3);
+    font-size: 0.95rem;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    margin-right: 0.65rem;
+    letter-spacing: 0.05em;
+  }
+  .docs-body h3 { font-size: 1.1rem; margin: 1.7rem 0 0.5rem; }
+
+  .docs-body p { margin: 0.7rem 0; }
+  .docs-body a { color: var(--aa-accent); }
+  .docs-body a:hover { text-decoration: underline; }
+
+  .docs-body em.math, .docs-body span.math, .docs-lede span.math {
+    font-family: var(--aa-serif); font-style: italic; white-space: nowrap;
+  }
+  .docs-body span.math sub, .docs-body span.math sup { font-style: normal; font-size: 0.72em; }
+
+  .docs-body code, .docs-lede code {
+    font-family: var(--aa-mono);
+    font-size: 0.84em;
+    color: var(--aa-ink);
+    background: var(--aa-code-bg);
+    border: 1px solid var(--aa-code-border);
+    border-radius: 4px;
+    padding: 0.08em 0.35em;
+  }
+
+  .docs-body pre {
+    background: var(--aa-code-bg);
+    border: 1px solid var(--aa-code-border);
+    border-radius: 8px;
+    padding: 0.95rem 1.15rem;
+    overflow-x: auto;
+    line-height: 1.55;
+    margin: 0.9rem 0 1.2rem;
+  }
+  .docs-body pre code { background: none; border: none; padding: 0; font-size: 0.83rem; }
+  .docs-body pre .cm { color: var(--aa-ink-3); }
+  .docs-body pre .kw { color: #7a5a1e; font-weight: 600; }
+  .docs-body pre .st { color: #5b6e3a; }
+  .docs-body pre .pr { color: var(--aa-ink-3); }
+
+  .docs-body .display-math {
+    font-family: var(--aa-serif);
+    font-style: italic;
+    text-align: center;
+    margin: 1.25rem 0;
+    font-size: 1.08rem;
+  }
+  .docs-body .display-math sub, .docs-body .display-math sup { font-style: normal; font-size: 0.7em; }
+
+  .docs-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.9rem 0 1.4rem;
+    font-size: 0.88rem;
+  }
+  .docs-body th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--aa-ink-3);
+    border-bottom: 1.5px solid var(--aa-ink-2);
+    padding: 0.45rem 0.9rem 0.45rem 0;
+  }
+  .docs-body td {
+    border-bottom: 1px solid var(--aa-hairline);
+    padding: 0.5rem 0.9rem 0.5rem 0;
+    vertical-align: top;
+  }
+  .docs-body td:first-child { max-width: 22rem; }
+
+  .docs-body .note {
+    background: var(--aa-accent-soft);
+    border-left: 3px solid var(--aa-accent);
+    border-radius: 0 6px 6px 0;
+    padding: 0.7rem 1rem;
+    margin: 1.1rem 0;
+    font-size: 0.92rem;
+  }
+</style>
+
+<script>
+  // Scrollspy for the fixed contents rail.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.side-nav a'));
+    var targets = links.map(function (a) {
+      return document.querySelector(a.getAttribute('href'));
+    });
+    function onScroll() {
+      var pos = window.scrollY + 130;
+      var active = -1;
+      for (var i = 0; i < targets.length; i++) {
+        if (targets[i] && targets[i].offsetTop <= pos) active = i;
+      }
+      links.forEach(function (a, i) { a.classList.toggle('active', i === active); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('DOMContentLoaded', onScroll);
+  })();
 </script>
 </body>
 </html>
