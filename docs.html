@@ -6,7 +6,7 @@
   <meta name="description"
     content="Documentation for articulatearena: a quotient metric on articulated kinematics via Lie-algebra endpoint twists.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Articulate Arena — Documentation</title>
+  <title>Articulate Arena Documentation</title>
 
   <link rel="stylesheet" href="./static/css/google-fonts-local.css">
   <link rel="icon" type="image/svg+xml" href="./static/images/articulatemetrics-icon.svg">
@@ -309,12 +309,10 @@
       <a href="#concepts">Core concepts</a>
       <a class="sub" href="#concept-endpoint">Endpoint pairs &amp; the metric E</a>
       <a class="sub" href="#concept-norms">Injected se(3) norms</a>
-      <a class="sub" href="#concept-compact">Continuous joints &amp; E∘φ</a>
+      <a class="sub" href="#concept-compact">Continuous joints &amp; E∘ϕ</a>
       <a class="sub" href="#concept-tree">The tree metric</a>
       <a href="#api">API reference</a>
       <a href="#cli">Command-line usage</a>
-      <a href="#layout">Package layout</a>
-      <a href="#citation">Citation</a>
     </nav>
 
     <a class="backlink" href="./index.html">← Project page</a>
@@ -335,7 +333,7 @@
           predictions and ground truth. A one-DOF joint
           <span class="math">J = (ξ, [l⁻, l⁺])</span> with unit screw twist <span class="math">ξ ∈ se(3)</span>
           and limits <span class="math">l⁻, l⁺</span> is represented by its unordered pair of
-          <em>endpoint twists</em> <span class="math">{z⁻, z⁺} = {l⁻ξ, l⁺ξ}</span>; the joint metric is the
+          <em>endpoint twists</em> <span class="math">{z⁻, z⁺} = {l⁻ξ, l⁺ξ}</span>. The joint metric is the
           quotient distance of flat <span class="math">se(3) × se(3)</span> under the swap:
         </p>
         <p class="display-math">
@@ -343,9 +341,9 @@
         </p>
         <p>
           where <span class="math">‖·‖</span> is an injected <span class="math">se(3)</span> norm. A subscript
-          names that choice — <span class="math">E<sub>α</sub></span> under the split norm,
-          <span class="math">E<sub>B</sub></span> under the kinetic-energy norm — and superscripts mark the
-          extensions <span class="math">E<sup>φ</sup></span> (compactified) and
+          names that choice, <span class="math">E<sub>α</sub></span> under the split norm and
+          <span class="math">E<sub>B</sub></span> under the kinetic-energy norm, and superscripts mark the
+          extensions <span class="math">E<sup>ϕ</sup></span> (compactified) and
           <span class="math">E<sup>tree</sup></span> (tree lift). The package
           provides the metric itself, a smooth training surrogate, the radial compactification that extends the
           metric continuously to unbounded (continuous) joints, and two object-level lifts: an optimal-assignment
@@ -359,15 +357,12 @@
 
       <section id="installation">
         <h2><span class="sec-no">2</span>Installation</h2>
-        <p>The package lives in <code>src/articulatearena/</code> of the
-          <a href="https://github.com/YumengHe/ArticulateMetrics">ArticulateMetrics</a> repository and follows the
-          standard <em>src</em> layout. From the repository root:</p>
-<pre><code><span class="pr">$</span> conda create -n articulatemetrics python=3.10 -y
-<span class="pr">$</span> conda activate articulatemetrics
-<span class="pr">$</span> pip install -e .</code></pre>
-        <p>An editable install registers the import name <code>articulatearena</code>; the repository scripts also
-          run without installation, as they place <code>src/</code> on <code>sys.path</code> themselves.
-          Python ≥ 3.10 is required.</p>
+        <p><code>articulatearena</code> is distributed on PyPI and requires Python ≥ 3.10. It depends only on
+          <code>numpy</code>, <code>scipy</code>, and <code>pyyaml</code>:</p>
+<pre><code><span class="pr">$</span> pip install articulatearena</code></pre>
+        <p>To work from a source checkout instead, run <code>pip install -e .</code> at the repository root. The
+          editable install registers the same import name, and the bundled scripts also run without installation,
+          as they place the package directory on <code>sys.path</code> themselves.</p>
       </section>
 
       <section id="quickstart">
@@ -403,7 +398,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
         <p>
           A joint is identified with the unordered pair of its endpoint twists
           <span class="math">{z⁻, z⁺} = {l⁻ξ, l⁺ξ}</span>. Because the pair is unordered,
-          <code>joint_metric</code> takes the minimum over the two pairings — this is the quotient by the
+          <code>joint_metric</code> takes the minimum over the two pairings. This is the quotient by the
           ℤ₂ swap and what makes <span class="math">E</span> well defined on joints rather than on labeled
           endpoint tuples. The hard <span class="math">min</span> is non-differentiable on its tie locus, so
           <code>training_loss</code> provides a smooth, swap-invariant surrogate for
@@ -411,18 +406,18 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
         </p>
 
         <h3 id="concept-norms">4.2&ensp;Injected se(3) norms</h3>
-        <p>Every metric function takes an <code>InnerProduct</code> — a callable mapping a shape-(6,) twist to
+        <p>Every metric function takes an <code>InnerProduct</code>, a callable mapping a shape-(6,) twist to
           its squared norm. Three constructors are provided:</p>
         <table>
           <thead><tr><th>Constructor</th><th>Norm</th></tr></thead>
           <tbody>
             <tr><td><code>make_split_norm(alpha)</code></td>
-              <td><span class="math">‖Δz‖<sub>α</sub>² = ‖Δω‖² + α²‖Δv‖²</span> — dimensionless; the resulting
+              <td><span class="math">‖Δz‖<sub>α</sub>² = ‖Δω‖² + α²‖Δv‖²</span>, which is dimensionless. The resulting
                 <span class="math">E<sub>α</sub></span> compares every joint by one fixed rule
-                (α is an inverse length; set it to match your units).</td></tr>
+                (α is an inverse length, set it to match your units).</td></tr>
             <tr><td><code>make_kinetic_energy_norm(inertia)</code></td>
               <td><span class="math">‖Δz‖<sub>B</sub>² = (1/m) Δωᵀ I Δω + ‖Δv + Δω × c‖²</span> from the child
-                link's <code>LinkInertia</code> (mass m, center of mass c, inertia I); the resulting
+                link's <code>LinkInertia</code> (mass m, center of mass c, inertia I). The resulting
                 <span class="math">E<sub>B</sub></span> is measured in meters and equals the RMS linearized
                 material motion of the link.</td></tr>
             <tr><td><code>make_riemannian_norm(metric)</code></td>
@@ -431,7 +426,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
 
-        <h3 id="concept-compact">4.3&ensp;Continuous joints and the compactification E∘φ</h3>
+        <h3 id="concept-compact">4.3&ensp;Continuous joints and the compactification E∘ϕ</h3>
         <p>
           A continuous joint has unbounded limits (<span class="math">l<sup>±</sup> = ±∞</span>), so its endpoint
           twists escape to infinity. <code>radial_compactify</code> maps <span class="math">se(3)</span> into its
@@ -439,12 +434,12 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           distance there:
         </p>
         <p class="display-math">
-          φ(z) = tanh(‖z‖/κ) z/‖z‖,&emsp;
-          E<sup>φ</sup>(J₁, J₂) = E({φ(z₁⁻), φ(z₁⁺)}, {φ(z₂⁻), φ(z₂⁺)}).
+          ϕ(z) = tanh(‖z‖/κ) z/‖z‖,&emsp;
+          E<sup>ϕ</sup>(J₁, J₂) = E({ϕ(z₁⁻), ϕ(z₁⁺)}, {ϕ(z₂⁻), ϕ(z₂⁺)}).
         </p>
         <p>
-          A continuous joint becomes the antipodal boundary pair <span class="math">{±ξ}</span> — the axis
-          direction up to sign — and <span class="math">E<sup>φ</sup></span> is continuous as a bounded joint's
+          A continuous joint becomes the antipodal boundary pair <span class="math">{±ξ}</span>, the axis
+          direction up to sign, and <span class="math">E<sup>ϕ</sup></span> is continuous as a bounded joint's
           limits grow toward the continuous limit, so bounded and continuous joints are compared on one compact
           space in a single dimensionless score. The benchmark uses <span class="math">κ = π</span>.
           <code>interval_term</code> supplies the extended-real comparison of the limit intervals themselves.
@@ -467,7 +462,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           over finite edit sequences <span class="math">π</span> on unrooted trees with unlabeled nodes. No
           hand-set topology penalty appears: a nearly welded extra handle is charged
           <span class="math">ε‖ξ‖</span> rather than a constant. Exactly-fixed edges are contracted first
-          (<code>contract_small_edges</code>); they are representation noise, not structure.
+          (<code>contract_small_edges</code>). They are representation noise, not structure.
         </p>
         <p>Two computations are provided:</p>
         <table>
@@ -475,37 +470,37 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           <tbody>
             <tr><td><code>assignment_tree_distance</code></td>
               <td>The assignment <em>relaxation</em>: a Hungarian matching over the joint multisets with
-                <span class="math">E(J, J₀)</span> as the unmatched cost. Polynomial for any input; a certified
-                lower bound of the exact distance; needs no tree topology from the prediction.</td></tr>
+                <span class="math">E(J, J₀)</span> as the unmatched cost. Polynomial for any input, a certified
+                lower bound of the exact distance, and it needs no tree topology from the prediction.</td></tr>
             <tr><td><code>exact_tree_distance</code></td>
               <td>The <em>exact</em> edit distance: the minimum over matchings that extend to an isomorphism of
-                the contracted trees. Returns <code>(distance, certified)</code>; when the relaxation's own
+                the contracted trees. Returns <code>(distance, certified)</code>. When the relaxation's own
                 optimal matching is realizable (checked in linear time by <code>matching_realizable</code>),
                 exactness is certified without any search.</td></tr>
           </tbody>
         </table>
         <p class="note">
           Unordered tree edit distance is NP-hard for general trees, which is why the benchmark protocol is
-          stated with the relaxation. At benchmark scale (2–8 movable joints) the exact distance is cheap: the
+          stated with the relaxation. At benchmark scale (2 to 8 movable joints) the exact distance is cheap: the
           certificate settles ≈ 91 % of corrupted predictions, the two quantities agree on ≈ 92 % of them
           (rank agreement τ = 0.994), and they agree exactly on every structured sweep.
         </p>
         <p>
           A simpler object-level alternative, <code>skeleton_distance</code>, adds a constant topology penalty
-          λ per unmatched joint on top of the assigned <span class="math">E</span> cost; it is retained for
+          λ per unmatched joint on top of the assigned <span class="math">E</span> cost. It is retained for
           comparison with prior hard-penalty protocols.
         </p>
       </section>
 
       <section id="api">
         <h2><span class="sec-no">5</span>API reference</h2>
-        <p>Public functions and classes, by module. All array arguments are NumPy <code>float64</code>;
+        <p>Public functions and classes, by module. All array arguments are NumPy <code>float64</code>, and
           twists are shape (6,) in the paper's convention <span class="math">ξ = (ω, v)</span>.</p>
 
-        <h3>Types — <code>articulatearena.types</code></h3>
+        <h3>Types · <code>articulatearena.types</code></h3>
         <table>
           <tbody>
-            <tr><td><code>Twist</code></td><td>Immutable shape-(6,) twist wrapper; raw array via <code>.data</code>.</td></tr>
+            <tr><td><code>Twist</code></td><td>Immutable shape-(6,) twist wrapper, raw array via <code>.data</code>.</td></tr>
             <tr><td><code>EndpointPair</code></td><td>Unordered pair <code>{u, v}</code> of endpoint twists.</td></tr>
             <tr><td><code>Joint</code></td><td>Unit screw twist <code>xi_hat</code>, limits <code>a</code>, <code>b</code> (±inf for continuous), and <code>joint_type</code>.</td></tr>
             <tr><td><code>LinkInertia</code></td><td>Mass, center of mass, and 3×3 rotational inertia of a link.</td></tr>
@@ -513,7 +508,7 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
 
-        <h3>Representation — <code>new_equation.representation</code></h3>
+        <h3>Representation · <code>new_equation.representation</code></h3>
         <table>
           <tbody>
             <tr><td><code>screw_twist(axis_dir, point, joint_type, pitch=0)</code></td>
@@ -526,17 +521,17 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
 
-        <h3>Joint metric — <code>new_equation.E</code></h3>
+        <h3>Joint metric · <code>new_equation.E</code></h3>
         <table>
           <tbody>
             <tr><td><code>joint_metric(u1, v1, u2, v2, inner_product)</code></td>
-              <td>The quotient metric <span class="math">E</span>; ℤ₂-swap minimum over endpoint pairings.</td></tr>
+              <td>The quotient metric <span class="math">E</span>, the ℤ₂-swap minimum over endpoint pairings.</td></tr>
             <tr><td><code>training_loss(u1, v1, u2, v2, inner_product, epsilon=1e-9)</code></td>
               <td>Smooth swap-invariant surrogate for <span class="math">E²</span> (differentiable objective).</td></tr>
           </tbody>
         </table>
 
-        <h3>Norms — <code>new_equation.inner_product</code></h3>
+        <h3>Norms · <code>new_equation.inner_product</code></h3>
         <table>
           <tbody>
             <tr><td><code>make_split_norm(alpha)</code></td><td>Split norm <span class="math">‖Δω‖² + α²‖Δv‖²</span>.</td></tr>
@@ -545,17 +540,17 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
 
-        <h3>Continuous joints — <code>new_equation.continuous</code></h3>
+        <h3>Continuous joints · <code>new_equation.continuous</code></h3>
         <table>
           <tbody>
-            <tr><td><code>radial_compactify(xi, inner_product, kappa)</code></td><td>Radial map φ into the open unit ball.</td></tr>
+            <tr><td><code>radial_compactify(xi, inner_product, kappa)</code></td><td>Radial map ϕ into the open unit ball.</td></tr>
             <tr><td><code>continuous_joint_repr(xi_hat, inner_product, kappa)</code></td><td>Boundary endpoint pair of an unbounded joint.</td></tr>
-            <tr><td><code>compactified_joint_metric(u1, v1, u2, v2, inner_product, kappa)</code></td><td><span class="math">E∘φ</span>, the compactified metric.</td></tr>
+            <tr><td><code>compactified_joint_metric(u1, v1, u2, v2, inner_product, kappa)</code></td><td><span class="math">E∘ϕ</span>, the compactified metric.</td></tr>
             <tr><td><code>interval_term(a1, a2)</code></td><td>Extended-real distance between limit values.</td></tr>
           </tbody>
         </table>
 
-        <h3>Tree metric — <code>new_equation.tree</code></h3>
+        <h3>Tree metric · <code>new_equation.tree</code></h3>
         <table>
           <tbody>
             <tr><td><code>cost_to_fixed(pair, inner_product)</code></td><td>Contraction/expansion cost <span class="math">E(J, J₀)</span>.</td></tr>
@@ -568,21 +563,21 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
             <tr><td><code>matching_realizable(edges1, edges2, matching)</code></td>
               <td>Linear-time check that a matching extends to an isomorphism of the contracted trees.</td></tr>
             <tr><td><code>exact_tree_distance(edges1, edges2, inner_product)</code></td>
-              <td>Exact motion-aware tree edit distance; returns <code>(distance, certified)</code>.</td></tr>
+              <td>Exact motion-aware tree edit distance. Returns <code>(distance, certified)</code>.</td></tr>
           </tbody>
         </table>
 
-        <h3>Skeleton distance — <code>new_equation.skeleton</code></h3>
+        <h3>Skeleton distance · <code>new_equation.skeleton</code></h3>
         <table>
           <tbody>
             <tr><td><code>topology_penalty(num_unmatched, num_relation_mismatches, lambda_topology, relation_weight=1)</code></td>
               <td>Constant-λ penalty for surplus joints and relation mismatches.</td></tr>
             <tr><td><code>skeleton_distance(cost_matrix, lambda_topology, ...)</code></td>
-              <td>Assigned <span class="math">E</span> cost plus topology penalty; returns <code>(row_ind, col_ind, total)</code>.</td></tr>
+              <td>Assigned <span class="math">E</span> cost plus topology penalty. Returns <code>(row_ind, col_ind, total)</code>.</td></tr>
           </tbody>
         </table>
 
-        <h3>Material motion — <code>new_equation.material_motion</code></h3>
+        <h3>Material motion · <code>new_equation.material_motion</code></h3>
         <table>
           <tbody>
             <tr><td><code>se3_exp(xi_hat, theta)</code></td><td>Rigid transform exp(θ ξ̂).</td></tr>
@@ -591,21 +586,21 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
 
-        <h3>Background math — <code>general_equation</code></h3>
+        <h3>Background math · <code>general_equation</code></h3>
         <table>
           <tbody>
             <tr><td><code>exp_map.exp_map(xi_hat, q=1)</code></td><td>se(3) exponential map.</td></tr>
             <tr><td><code>assignment.assign(cost_matrix)</code></td><td>Hungarian optimal assignment.</td></tr>
-            <tr><td><code>tree_edit.tree_edit_distance(...)</code></td><td>Classical ordered tree edit distance (Zhang–Shasha) on <code>TreeNode</code>s.</td></tr>
+            <tr><td><code>tree_edit.tree_edit_distance(...)</code></td><td>Classical ordered tree edit distance (Zhang-Shasha) on <code>TreeNode</code>s.</td></tr>
             <tr><td><code>configuration.configuration_difference(...)</code></td><td>L² configuration difference (Park 1995).</td></tr>
           </tbody>
         </table>
 
-        <h3>I/O — <code>read</code> and <code>write</code></h3>
+        <h3>I/O · <code>read</code> and <code>write</code></h3>
         <table>
           <tbody>
             <tr><td><code>read.config_loader.load_config(path=None)</code></td>
-              <td>Flatten a grouped YAML config into the <code>Config</code> dataclass; defaults to <code>configs/default.yaml</code>.</td></tr>
+              <td>Flatten a grouped YAML config into the <code>Config</code> dataclass. Defaults to <code>configs/default.yaml</code>.</td></tr>
             <tr><td><code>read.urdf_loader.load_joint(urdf_path, joint_name)</code></td>
               <td>Typed <code>Joint</code> from a URDF, with the axis resolved to the world frame by forward kinematics.</td></tr>
             <tr><td><code>read.inertia_loader.load_link_inertia</code>, <code>load_joint_child_inertia</code></td>
@@ -617,15 +612,15 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
 
-        <h3>Baselines — <code>previous_metrics.component_scores</code></h3>
+        <h3>Baselines · <code>previous_metrics.component_scores</code></h3>
         <p>Component scores of prior evaluation templates (type, axis, origin, and limit errors with thresholded
           <code>joint_success</code>), kept for reproducing §3-style baseline numbers.</p>
       </section>
 
       <section id="cli">
         <h2><span class="sec-no">6</span>Command-line usage</h2>
-        <p>The repository entry point evaluates a prediction/ground-truth case end to end — load the config, run
-          the pure metric functions, and write a report:</p>
+        <p>The repository entry point evaluates a prediction/ground-truth case end to end. It loads the config, runs
+          the pure metric functions, and writes a report:</p>
 <pre><code><span class="pr">$</span> python scripts/run.py --config configs/default.yaml
 <span class="cm"># → Report written to out/metrics_report.json</span></code></pre>
         <p><code>configs/default.yaml</code> groups the knobs that the paper treats as caller-supplied:</p>
@@ -640,44 +635,14 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
           </tbody>
         </table>
         <p>Auxiliary scripts: <code>scripts/generate_error_cases.py</code> synthesizes controlled error cases from
-          a URDF; <code>scripts/run_previous_metrics.py</code> scores the same cases with the baseline component
-          metrics; <code>examples/run_real_cases.py</code> evaluates real PartNet-Mobility objects.</p>
+          a URDF, <code>scripts/run_previous_metrics.py</code> scores the same cases with the baseline component
+          metrics, and <code>examples/run_real_cases.py</code> evaluates real PartNet-Mobility objects.</p>
       </section>
 
-      <section id="layout">
-        <h2><span class="sec-no">7</span>Package layout</h2>
-<pre><code>src/articulatearena/
-  types.py            <span class="cm"># Twist, EndpointPair, Joint, LinkInertia, InnerProduct</span>
-  config.py           <span class="cm"># flat Config dataclass</span>
-  validation.py       <span class="cm"># shape / finiteness / positive-definite checks</span>
-  new_equation/       <span class="cm"># the paper's formulas</span>
-    representation.py <span class="cm">#   screw twist, endpoint pairs</span>
-    E.py              <span class="cm">#   joint_metric + training_loss</span>
-    inner_product.py  <span class="cm">#   split / kinetic-energy / Riemannian norms</span>
-    continuous.py     <span class="cm">#   compactification, E∘φ, interval term</span>
-    tree.py           <span class="cm">#   tree metric: relaxation + exact edit distance</span>
-    skeleton.py       <span class="cm">#   constant-λ topology penalty (baseline lift)</span>
-    material_motion.py<span class="cm">#   physical-motion discrepancy (calibration)</span>
-  general_equation/   <span class="cm"># standard background math</span>
-  previous_metrics/   <span class="cm"># §3 baseline component scores</span>
-  read/               <span class="cm"># YAML config, URDF, inertia, case loaders</span>
-  write/              <span class="cm"># JSON / Markdown reports</span></code></pre>
-      </section>
-
-      <section id="citation">
-        <h2><span class="sec-no">8</span>Citation</h2>
-        <p>If you use <code>articulatearena</code> in academic work, please cite the paper:</p>
-<pre><code>@inproceedings{articulatemetrics2026,
-  title     = {A Quotient Metric on Articulated Kinematics
-               via Lie-Algebra Endpoint Twists},
-  author    = {Anonymous},
-  booktitle = {Under review},
-  year      = {2026}
-}</code></pre>
-      </section>
+      
 
       <footer class="docs-footer">
-        Articulate Arena · MIT License · <a href="./index.html">project page</a>
+        Articulate Arena · <a href="./index.html">project page</a>
       </footer>
 
     </div>
