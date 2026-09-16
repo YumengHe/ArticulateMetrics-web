@@ -412,13 +412,14 @@
     }
 
     /* Generated articulation-method qualitative comparison. */
+    /* Horizontal pan only; every row is laid out at full height. */
     .articulation-results-scroll {
-        max-height: min(78vh, 900px);
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
         padding-bottom: 8px;
         cursor: grab;
         user-select: none;
-        touch-action: pan-x pan-y;
+        touch-action: pan-y;
         scrollbar-gutter: stable;
     }
     .articulation-results-scroll.is-dragging {
@@ -2215,17 +2216,13 @@
 
       let pointerId = null;
       let startX = 0;
-      let startY = 0;
       let startScrollLeft = 0;
-      let startScrollTop = 0;
 
       scroller.addEventListener('pointerdown', (event) => {
           if (event.button !== 0) return;
           pointerId = event.pointerId;
           startX = event.clientX;
-          startY = event.clientY;
           startScrollLeft = scroller.scrollLeft;
-          startScrollTop = scroller.scrollTop;
           scroller.classList.add('is-dragging');
           scroller.setPointerCapture(pointerId);
       });
@@ -2233,7 +2230,6 @@
       scroller.addEventListener('pointermove', (event) => {
           if (event.pointerId !== pointerId) return;
           scroller.scrollLeft = startScrollLeft - (event.clientX - startX);
-          scroller.scrollTop = startScrollTop - (event.clientY - startY);
           event.preventDefault();
       });
 
