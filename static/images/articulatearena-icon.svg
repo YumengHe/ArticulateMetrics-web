@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">ArticulateArena icon</title>
+  <desc id="desc">A capital A drawn as an articulated linkage: two palette-colored links joined at an amber pivot, with a crossbar link and joint dots.</desc>
+  <rect x="24" y="24" width="464" height="464" rx="104" fill="#26231D"/>
+  <line x1="256.0" y1="116.0" x2="148.0" y2="404.0" stroke="#5B8DB8" stroke-width="58" stroke-linecap="round"/>
+  <line x1="256.0" y1="116.0" x2="364.0" y2="404.0" stroke="#6FB5AE" stroke-width="58" stroke-linecap="round"/>
+  <line x1="183.6" y1="309.0" x2="328.4" y2="309.0" stroke="#E5B455" stroke-width="50" stroke-linecap="round"/>
+  <circle cx="183.6" cy="309.0" r="17" fill="#FCFBF8"/>
+  <circle cx="328.4" cy="309.0" r="17" fill="#FCFBF8"/>
+  <circle cx="256.0" cy="116.0" r="27" fill="#FCFBF8"/>
+  <circle cx="256.0" cy="116.0" r="12" fill="#E5B455"/>
+</svg>
