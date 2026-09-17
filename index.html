@@ -156,6 +156,32 @@
     </div>
   </section>
 
+  <!-- Pipeline Section -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Pipeline</h2>
+          <div class="content has-text-justified">
+            <p>
+              From a URDF joint to our metric. (1) A joint is specified by type, axis, origin, and
+              limits. (2) The twist ξ = (ω, v) absorbs type, axis, and origin at once, and the
+              limits give the unordered endpoint pair z<sup>±</sup> = l<sup>±</sup>ξ. (3) The metric
+              E compares two endpoint pairs under the better of the direct and the swapped
+              assignment. (4) Radial compactification maps unbounded ranges into the unit ball, so
+              continuous joints become boundary points and every joint type is scored on one scale.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="has-text-centered">
+        <img src="./static/images/pipeline.png"
+             alt="Pipeline from a URDF joint to the metric: joint parameters, the endpoint-twist pair, the swap-minimized distance E, and the radial compactification"
+             class="interpolation-image" style="margin-top: 0.5rem;" />
+      </div>
+    </div>
+  </section>
+
   <!-- Demonstration of Errors Section -->
   <section class="section">
     <div class="container is-max-desktop">
@@ -2211,7 +2237,7 @@
           if (it.wrong != null && it.wrong !== '')
               rows.push(`<span class="demo-param-label demo-param-wrong">Wrong:</span><span class="demo-param-val demo-param-wrong">${esc(it.wrong)}</span>`);
           if (it.error != null && it.error !== '')
-              rows.push(`<span class="demo-param-label demo-param-error">Error:</span><span class="demo-param-val demo-param-error">${esc(it.error)}</span>`);
+              rows.push(`<span class="demo-param-label demo-param-error"><em>E</em><sub>α</sub>:</span><span class="demo-param-val demo-param-error">${esc(it.error)}</span>`);
           const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
           return `
           <div class="error-demo-item">
