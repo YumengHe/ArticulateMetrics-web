@@ -2187,7 +2187,7 @@
           const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
           return `
           <div class="error-demo-item">
-            <img src="static/demo/${esc(it.file)}" alt="${esc(it.title)}" loading="lazy">
+            <img src="static/demo/${esc(it.file)}?v=2" alt="${esc(it.title)}" loading="lazy">
             <h4>${esc(it.title)}</h4>
             ${params}
           </div>`;
