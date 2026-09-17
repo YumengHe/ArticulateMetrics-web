@@ -1730,7 +1730,35 @@
         border-radius: 8px;
     }
     .articulation-results-header { color: var(--aa-ink); }
-    .articulation-results-label strong { color: var(--aa-ink); }
+    /* Case column: warm panel, serif name (wrapping, not clipped), ID as a pill */
+    .articulation-results-label {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 7px;
+        padding: 12px 8px;
+        background: #f7f5f0;
+    }
+    .articulation-results-label strong {
+        color: var(--aa-ink);
+        font-family: var(--aa-serif);
+        font-size: 0.98rem;
+        font-weight: 600;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+    .articulation-results-label span {
+        margin-top: 0;
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 0.66rem;
+        letter-spacing: 0.02em;
+        color: var(--aa-ink2);
+        background: #fff;
+        border: 1px solid var(--aa-hairline);
+        border-radius: 999px;
+        padding: 1px 8px;
+    }
+    .articulation-results-header:first-child { background: #f7f5f0; }
     .table.protocols-table thead th,
     .table.protocols-table tbody tr:last-child td { border-color: var(--aa-ink); }
     .table.protocols-table { background: transparent; }
@@ -2187,7 +2215,7 @@
           const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
           return `
           <div class="error-demo-item">
-            <img src="static/demo/${esc(it.file)}?v=2" alt="${esc(it.title)}" loading="lazy">
+            <img src="static/demo/${esc(it.file)}?v=3" alt="${esc(it.title)}" loading="lazy">
             <h4>${esc(it.title)}</h4>
             ${params}
           </div>`;
@@ -2225,7 +2253,7 @@
               const joints = (m) => item.methods[m].movableJoints;
               const jmeta = (m) => `${joints(m)} movable joint${joints(m) === 1 ? '' : 's'}`;
               return [
-                  `<div class="articulation-results-label"><strong>${esc(item.category)}</strong><span>ID ${esc(item.id)}</span></div>`,
+                  `<div class="articulation-results-label"><strong>${esc(item.category).replace(/([a-z])([A-Z])/g, '$1\u200b$2')}</strong><span>ID ${esc(item.id)}</span></div>`,
                   cell(`${base}/input.png`, `${item.category} input`, 'Front view'),
                   cell(`${base}/spark.gif`, `${item.category} SPARK articulation`, jmeta('spark')),
                   cell(`${base}/urdformer.gif`, `${item.category} URDFormer articulation`, jmeta('urdformer')),
