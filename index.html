@@ -212,12 +212,12 @@
           <div class="content has-text-justified">
             <p>
               Qualitative comparison over four benchmark cases rendered with the viewer's
-              per-part palette, so every part keeps its own flat color. Rows are object
-              instances; the first column is the case itself, and the rest are each method's
-              articulated output, animated over its predicted joints. The label under each cell
-              counts the movable joints the method predicts. The quantitative evaluation
-              aggregates all valid outputs in the evaluation set, not only these examples.
-              Drag the grid sideways to see the remaining methods.
+              per-part palette, so every part keeps its own flat color. Columns are object
+              instances and rows are the methods, starting from the ground truth, each cell
+              animating that method's articulated output over its predicted joints. The label
+              under each cell counts the movable joints the method predicts, and hovering a
+              cell magnifies its clip. The quantitative evaluation aggregates all valid
+              outputs in the evaluation set, not only these examples.
             </p>
           </div>
         </div>
@@ -1689,9 +1689,9 @@
     }
     .case-render-table {
         display: grid;
-        grid-template-columns: 112px repeat(9, minmax(260px, 1fr));
+        /* column template + min-width are set from cases.js (one column per object) */
+        grid-template-columns: 132px repeat(4, minmax(180px, 1fr));
         gap: 1px;
-        min-width: 2452px;
         overflow: hidden;
         border: 1px solid var(--aa-hairline);
         border-radius: 8px;
@@ -1730,8 +1730,11 @@
     .case-render-header:first-child { background: #f7f5f0; }
     .case-render-cell {
         min-width: 0;
-        padding: 10px;
+        padding: 8px;
+        position: relative;
     }
+    /* Hovering a cell zooms its clip above the neighbors. */
+    .case-render-cell:hover { z-index: 6; }
     .case-render-cell video {
         display: block;
         width: 100%;
@@ -1740,6 +1743,14 @@
         background: #fff;
         border-radius: 4px;
         pointer-events: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        transform-origin: center;
+        position: relative;
+    }
+    .case-render-cell:hover video {
+        transform: scale(1.5);
+        box-shadow: 0 6px 24px rgba(31, 30, 27, 0.25);
+        background: #fff;
     }
     .case-render-meta {
         min-height: 18px;
@@ -1760,8 +1771,7 @@
     }
     @media (max-width: 768px) {
         .case-render-table {
-            grid-template-columns: 92px repeat(9, 285px);
-            min-width: 2657px;
+            grid-template-columns: 92px repeat(4, 220px);
         }
         .case-render-label { padding: 8px; }
         .case-render-cell { padding: 7px; }
@@ -2265,14 +2275,18 @@
               <div class="case-render-meta">${esc(meta)}</div>
             </div>`;
       };
+      // Transposed: one COLUMN per object, one ROW per method, so a page
+      // width shows every object at once and rows scroll with the page.
+      table.style.gridTemplateColumns = `132px repeat(${items.length}, minmax(180px, 1fr))`;
+      table.style.minWidth = `${132 + items.length * 190}px`;
       table.innerHTML = [
-          '<div class="case-render-header">Case</div>',
-          ...sources.map((source) =>
-              `<div class="case-render-header">${esc(source.label)}</div>`),
-          ...items.flatMap((item) => [
-              `<div class="case-render-label"><strong>${esc(item.category)
-                  .replace(/([a-z])([A-Z])/g, '$1\u200b$2')}</strong></div>`,
-              ...sources.map((source) => cell(item, source))
+          '<div class="case-render-header">Method</div>',
+          ...items.map((item) =>
+              `<div class="case-render-header">${esc(item.category)
+                  .replace(/([a-z])([A-Z])/g, '$1\u200b$2')}</div>`),
+          ...sources.flatMap((source) => [
+              `<div class="case-render-label"><strong>${esc(source.label)}</strong></div>`,
+              ...items.map((item) => cell(item, source))
           ])
       ].join('');
   }
