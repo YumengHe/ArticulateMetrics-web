@@ -202,26 +202,29 @@
     </div>
   </section>
 
-  <!-- Qualitative Articulation Results Section -->
-  <section class="section articulation-results-section" id="qualitative-results">
+  <!-- Qualitative Results: the four benchmark cases rendered in part colors,
+       one motion clip per (case, method). -->
+  <section class="section case-renders-section" id="qualitative-results">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column">
           <h2 class="title is-3">Qualitative Results</h2>
           <div class="content has-text-justified">
             <p>
-              Qualitative comparison on objects included in the 100-object evaluation. Rows are
-              object instances, and columns show the input and each method's articulated output,
-              animated over its predicted joints. The label under each cell counts the movable
-              joints the method predicts. The quantitative evaluation aggregates all valid outputs
-              in the evaluation set, not only these examples. Drag the grid sideways to see the
-              remaining methods.
+              Qualitative comparison over four benchmark cases rendered with the viewer's
+              per-part palette, so every part keeps its own flat color. Rows are object
+              instances; the first column is the case itself, and the rest are each method's
+              articulated output, animated over its predicted joints. The label under each cell
+              counts the movable joints the method predicts. The quantitative evaluation
+              aggregates all valid outputs in the evaluation set, not only these examples.
+              Drag the grid sideways to see the remaining methods.
             </p>
           </div>
         </div>
       </div>
-      <div class="articulation-results-scroll">
-        <div class="articulation-results-grid" id="articulation-results-grid"></div>
+      <!-- Populated dynamically from static/case-renders/cases.js -->
+      <div class="case-render-scroll">
+        <div class="case-render-table" id="case-render-table"></div>
       </div>
     </div>
   </section>
@@ -375,87 +378,6 @@
             gap: 12px;
         }
         .joint-card-media img { height: 130px; }
-    }
-
-    /* Generated articulation-method qualitative comparison. */
-    /* Horizontal pan only; every row is laid out at full height. */
-    .articulation-results-scroll {
-        overflow-x: auto;
-        overflow-y: hidden;
-        padding-bottom: 8px;
-        cursor: grab;
-        user-select: none;
-        touch-action: pan-y;
-        scrollbar-gutter: stable;
-    }
-    .articulation-results-scroll.is-dragging {
-        cursor: grabbing;
-    }
-    .articulation-results-grid {
-        display: grid;
-        grid-template-columns: 112px repeat(7, minmax(180px, 1fr));
-        gap: 1px;
-        min-width: 1400px;
-        overflow: hidden;
-        border: 1px solid #d9dde3;
-        border-radius: 6px;
-        background: #d9dde3;
-    }
-    .articulation-results-header,
-    .articulation-results-label,
-    .articulation-results-cell {
-        background: #fff;
-    }
-    .articulation-results-header {
-        padding: 12px 10px;
-        color: #2e343b;
-        font-size: 0.86rem;
-        font-weight: 700;
-        text-align: center;
-    }
-    .articulation-results-label {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 12px;
-        line-height: 1.25;
-    }
-    .articulation-results-label strong {
-        color: #24292f;
-        font-size: 0.9rem;
-    }
-    .articulation-results-label span {
-        margin-top: 4px;
-        color: #6b7280;
-        font-size: 0.75rem;
-    }
-    .articulation-results-cell {
-        min-width: 0;
-        padding: 10px;
-        text-align: center;
-    }
-    .articulation-results-cell img {
-        display: block;
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: contain;
-        background: #fff;
-        pointer-events: none;
-    }
-    .articulation-result-meta {
-        min-height: 18px;
-        margin-top: 6px;
-        color: #6b7280;
-        font-size: 0.72rem;
-        line-height: 18px;
-    }
-    @media (max-width: 768px) {
-        .articulation-results-grid {
-            grid-template-columns: 90px repeat(7, 190px);
-            min-width: 1420px;
-        }
-        .articulation-results-label { padding: 8px; }
-        .articulation-results-cell { padding: 7px; }
     }
 
     /* Demonstration of Errors gif grid */
@@ -1751,22 +1673,53 @@
         transform: translateY(-3px) scale(1.01);
         box-shadow: 0 6px 18px rgba(31, 30, 27, 0.12);
     }
-    .articulation-results-grid {
-        border-color: var(--aa-hairline);
-        background: var(--aa-hairline);
-        border-radius: 8px;
+    /* Qualitative results: part-color motion clips, one per (case, method).
+       Horizontal pan only, mirroring the qualitative-results grid. */
+    .case-render-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 8px;
+        cursor: grab;
+        user-select: none;
+        touch-action: pan-y;
+        scrollbar-gutter: stable;
     }
-    .articulation-results-header { color: var(--aa-ink); }
-    /* Case column: warm panel, serif name (wrapping, not clipped), ID as a pill */
-    .articulation-results-label {
+    .case-render-scroll.is-dragging {
+        cursor: grabbing;
+    }
+    .case-render-table {
+        display: grid;
+        grid-template-columns: 112px repeat(9, minmax(260px, 1fr));
+        gap: 1px;
+        min-width: 2452px;
+        overflow: hidden;
+        border: 1px solid var(--aa-hairline);
+        border-radius: 8px;
+        background: var(--aa-hairline);
+    }
+    .case-render-header,
+    .case-render-label,
+    .case-render-cell {
+        background: #fff;
+    }
+    .case-render-header {
+        padding: 12px 10px;
+        color: var(--aa-ink);
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-align: center;
+    }
+    /* Case column: warm panel + serif name and ID pill, like the table label. */
+    .case-render-label {
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
-        gap: 7px;
         padding: 12px 8px;
         background: #f7f5f0;
+        text-align: center;
     }
-    .articulation-results-label strong {
+    .case-render-label strong {
         color: var(--aa-ink);
         font-family: var(--aa-serif);
         font-size: 0.98rem;
@@ -1774,18 +1727,45 @@
         line-height: 1.2;
         overflow-wrap: anywhere;
     }
-    .articulation-results-label span {
-        margin-top: 0;
-        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-        font-size: 0.66rem;
-        letter-spacing: 0.02em;
-        color: var(--aa-ink2);
-        background: #fff;
-        border: 1px solid var(--aa-hairline);
-        border-radius: 999px;
-        padding: 1px 8px;
+    .case-render-header:first-child { background: #f7f5f0; }
+    .case-render-cell {
+        min-width: 0;
+        padding: 10px;
     }
-    .articulation-results-header:first-child { background: #f7f5f0; }
+    .case-render-cell video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 720 / 522;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 4px;
+        pointer-events: none;
+    }
+    .case-render-meta {
+        min-height: 18px;
+        margin-top: 6px;
+        color: var(--aa-ink2);
+        font-size: 0.72rem;
+        line-height: 18px;
+        text-align: center;
+    }
+    .case-render-cell.empty {
+        background: repeating-linear-gradient(
+            45deg,
+            #f7f5f0,
+            #f7f5f0 8px,
+            #efece4 8px,
+            #efece4 16px
+        );
+    }
+    @media (max-width: 768px) {
+        .case-render-table {
+            grid-template-columns: 92px repeat(9, 285px);
+            min-width: 2657px;
+        }
+        .case-render-label { padding: 8px; }
+        .case-render-cell { padding: 7px; }
+    }
     .table.protocols-table thead th,
     .table.protocols-table tbody tr:last-child td { border-color: var(--aa-ink); }
     .table.protocols-table { background: transparent; }
@@ -1794,7 +1774,7 @@
 
 <!-- Demonstration of Errors data (loaded as a global so it also works when opening index.html directly via file://) -->
 <script src="./static/demo/demo.js"></script>
-<script src="./static/articulation-results/results.js"></script>
+<script src="./static/case-renders/cases.js"></script>
 
 <script>
   // Strip trailing digits and replace underscores so folder keys like "bread11" or
@@ -2250,83 +2230,132 @@
   }
   window.addEventListener('DOMContentLoaded', loadErrorDemos);
 
-  function loadArticulationResults() {
-      const grid = document.getElementById('articulation-results-grid');
-      if (!grid) return;
-      const items = window.ARTICULATION_RESULTS;
-      if (!Array.isArray(items) || items.length === 0) {
-          grid.closest('.articulation-results-section').style.display = 'none';
+  // Qualitative results: one part-color motion clip per (case, source).
+  // Edit static/case-renders/cases.js to add cases or sources.
+  function loadCaseRenders() {
+      const table = document.getElementById('case-render-table');
+      if (!table) return;
+      const items = window.CASE_RENDER_ITEMS;
+      const sources = window.CASE_RENDER_SOURCES;
+      if (!Array.isArray(items) || items.length === 0
+          || !Array.isArray(sources) || sources.length === 0) {
+          table.closest('.case-renders-section').style.display = 'none';
           return;
       }
       const esc = (value) => String(value == null ? '' : value)
           .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;');
-      grid.innerHTML = [
-          '<div class="articulation-results-header">Case</div>',
-          '<div class="articulation-results-header">Input</div>',
-          '<div class="articulation-results-header">SPARK</div>',
-          '<div class="articulation-results-header">URDFormer</div>',
-          '<div class="articulation-results-header">ArtLLM</div>',
-          '<div class="articulation-results-header">Articulate-Anything</div>',
-          '<div class="articulation-results-header">Ditto</div>',
-          '<div class="articulation-results-header">Articraft</div>',
-          ...items.flatMap((item) => {
-              const base = `static/articulation-results/${encodeURIComponent(item.id)}`;
-              const cell = (source, alt, meta) => `
-                <div class="articulation-results-cell">
-                  <img src="${source}" alt="${esc(alt)}">
-                  <div class="articulation-result-meta">${esc(meta)}</div>
-                </div>`;
-              const joints = (m) => item.methods[m].movableJoints;
-              const jmeta = (m) => `${joints(m)} movable joint${joints(m) === 1 ? '' : 's'}`;
-              return [
-                  `<div class="articulation-results-label"><strong>${esc(item.category).replace(/([a-z])([A-Z])/g, '$1\u200b$2')}</strong><span>ID ${esc(item.id)}</span></div>`,
-                  cell(`${base}/input.png`, `${item.category} input`, 'Front view'),
-                  cell(`${base}/spark.gif`, `${item.category} SPARK articulation`, jmeta('spark')),
-                  cell(`${base}/urdformer.gif`, `${item.category} URDFormer articulation`, jmeta('urdformer')),
-                  cell(`${base}/artllm.gif`, `${item.category} ArtLLM articulation`, jmeta('artllm')),
-                  cell(`${base}/articulate.gif`, `${item.category} Articulate-Anything articulation`, jmeta('articulate')),
-                  cell(`${base}/ditto.gif`, `${item.category} Ditto articulation`, jmeta('ditto')),
-                  cell(`${base}/articraft.png`, `${item.category} Articraft result`, jmeta('articraft'))
-              ];
-          })
+      const cell = (item, source) => {
+          const missing = Array.isArray(item.missing) && item.missing.includes(source.key);
+          if (missing) return '<div class="case-render-cell empty"></div>';
+          const src = `static/case-renders/${encodeURIComponent(item.id)}/`
+              + `${encodeURIComponent(source.key)}_motion.mp4?v=1`;
+          const poster = `static/case-renders/${encodeURIComponent(item.id)}/`
+              + `${encodeURIComponent(source.key)}_poster.png?v=1`;
+          const joints = item.joints && item.joints[source.key];
+          const meta = joints == null
+              ? ''
+              : `${joints} movable joint${joints === 1 ? '' : 's'}`;
+          return `
+            <div class="case-render-cell">
+              <video muted loop playsinline preload="none"
+                     data-src="${src}" data-poster="${poster}"
+                     aria-label="${esc(item.category)} ${esc(source.label)} motion">
+              </video>
+              <div class="case-render-meta">${esc(meta)}</div>
+            </div>`;
+      };
+      table.innerHTML = [
+          '<div class="case-render-header">Case</div>',
+          ...sources.map((source) =>
+              `<div class="case-render-header">${esc(source.label)}</div>`),
+          ...items.flatMap((item) => [
+              `<div class="case-render-label"><strong>${esc(item.category)
+                  .replace(/([a-z])([A-Z])/g, '$1\u200b$2')}</strong></div>`,
+              ...sources.map((source) => cell(item, source))
+          ])
       ].join('');
   }
-  window.addEventListener('DOMContentLoaded', loadArticulationResults);
+  window.addEventListener('DOMContentLoaded', loadCaseRenders);
 
-  function enableArticulationResultsDrag() {
-      const scroller = document.querySelector('.articulation-results-scroll');
-      if (!scroller) return;
+  // Clips load lazily: nothing is fetched until a cell comes near the viewport,
+  // and playback pauses again once it leaves. 36 eagerly-loaded, looping videos
+  // otherwise stall each other on a slow connection.
+  function enableCaseRenderLazyPlayback() {
+      const videos = [...document.querySelectorAll('#case-render-table video')];
+      if (videos.length === 0) return;
 
-      let pointerId = null;
-      let startX = 0;
-      let startScrollLeft = 0;
-
-      scroller.addEventListener('pointerdown', (event) => {
-          if (event.button !== 0) return;
-          pointerId = event.pointerId;
-          startX = event.clientX;
-          startScrollLeft = scroller.scrollLeft;
-          scroller.classList.add('is-dragging');
-          scroller.setPointerCapture(pointerId);
-      });
-
-      scroller.addEventListener('pointermove', (event) => {
-          if (event.pointerId !== pointerId) return;
-          scroller.scrollLeft = startScrollLeft - (event.clientX - startX);
-          event.preventDefault();
-      });
-
-      const stopDragging = (event) => {
-          if (event.pointerId !== pointerId) return;
-          pointerId = null;
-          scroller.classList.remove('is-dragging');
-          if (scroller.hasPointerCapture(event.pointerId)) {
-              scroller.releasePointerCapture(event.pointerId);
+      const arm = (video) => {
+          if (video.dataset.armed) return;
+          video.dataset.armed = 'true';
+          // The still frame is a separate small PNG: attaching it here instead
+          // of in the markup keeps ~0.5 MiB of posters off the initial load.
+          if (!video.poster && video.dataset.poster) video.poster = video.dataset.poster;
+          video.src = video.dataset.src;
+          video.load();
+      };
+      const start = (video) => {
+          const promise = video.play();
+          if (promise !== undefined) {
+              promise.catch(() => {
+                  // Autoplay refused (rare for a muted clip): play on the first click.
+                  video.addEventListener('click', () => video.play().catch(() => {}), { once: true });
+              });
           }
       };
-      scroller.addEventListener('pointerup', stopDragging);
-      scroller.addEventListener('pointercancel', stopDragging);
+
+      if (!('IntersectionObserver' in window)) {
+          videos.forEach((video) => { arm(video); start(video); });
+          return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+              const video = entry.target;
+              if (entry.isIntersecting) {
+                  arm(video);
+                  start(video);
+              } else {
+                  video.pause();
+              }
+          });
+      }, { rootMargin: '300px 0px' });
+      videos.forEach((video) => observer.observe(video));
+  }
+  window.addEventListener('DOMContentLoaded', enableCaseRenderLazyPlayback);
+
+  function enableArticulationResultsDrag() {
+      const scrollers = document.querySelectorAll('.case-render-scroll');
+      scrollers.forEach((scroller) => {
+          let pointerId = null;
+          let startX = 0;
+          let startScrollLeft = 0;
+
+          scroller.addEventListener('pointerdown', (event) => {
+              if (event.button !== 0) return;
+              pointerId = event.pointerId;
+              startX = event.clientX;
+              startScrollLeft = scroller.scrollLeft;
+              scroller.classList.add('is-dragging');
+              scroller.setPointerCapture(pointerId);
+          });
+
+          scroller.addEventListener('pointermove', (event) => {
+              if (event.pointerId !== pointerId) return;
+              scroller.scrollLeft = startScrollLeft - (event.clientX - startX);
+              event.preventDefault();
+          });
+
+          const stopDragging = (event) => {
+              if (event.pointerId !== pointerId) return;
+              pointerId = null;
+              scroller.classList.remove('is-dragging');
+              if (scroller.hasPointerCapture(event.pointerId)) {
+                  scroller.releasePointerCapture(event.pointerId);
+              }
+          };
+          scroller.addEventListener('pointerup', stopDragging);
+          scroller.addEventListener('pointercancel', stopDragging);
+      });
   }
   window.addEventListener('DOMContentLoaded', enableArticulationResultsDrag);
 
@@ -2473,14 +2502,16 @@
 
   window.addEventListener('DOMContentLoaded', loadComparisonSliders);
 
-  // Ensure all videos play and loop properly
+  // Native autoplay does the work for any other video on the page; the one
+  // thing worth adding is a play-on-click fallback when autoplay is refused.
+  // No load() here, and no stall/error retry: reloading a media element throws
+  // away the bytes already downloaded, so a slow connection ends up in a
+  // restart loop instead of filling its buffer. The qualitative-results clips
+  // opt out entirely (data-src + poster) and are driven by
+  // enableCaseRenderLazyPlayback instead.
   function ensureVideoPlayback() {
-      const videos = document.querySelectorAll('video');
+      const videos = document.querySelectorAll('video:not([data-src])');
       videos.forEach(video => {
-          // Force reload and play
-          video.load();
-
-          // Handle play promise
           const playPromise = video.play();
           if (playPromise !== undefined) {
               playPromise.catch(error => {
@@ -2491,28 +2522,6 @@
                   }, { once: true });
               });
           }
-
-          // Ensure looping when video ends
-          video.addEventListener('ended', function() {
-              this.currentTime = 0;
-              this.play();
-          });
-
-          // Handle stalling
-          video.addEventListener('stalled', function() {
-              console.log('Video stalled, reloading...');
-              this.load();
-              this.play();
-          });
-
-          // Handle errors
-          video.addEventListener('error', function(e) {
-              console.error('Video error:', e);
-              setTimeout(() => {
-                  this.load();
-                  this.play();
-              }, 1000);
-          });
       });
   }
 
