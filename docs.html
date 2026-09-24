@@ -258,6 +258,32 @@
     /* Long call signatures wrap at spaces; keep the column from swallowing the row. */
     td:first-child { max-width: 24rem; }
 
+    figure.tut { margin: 1.1rem 0 1.5rem; }
+    figure.tut img {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      background: #fff;
+    }
+    figure.tut figcaption {
+      margin-top: 0.45rem;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.86rem;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+    .confusion {
+      border-left: 3px solid var(--ink-3);
+      padding: 0.15rem 0 0.15rem 1rem;
+      margin: 0.9rem 0;
+      color: var(--ink-2);
+      font-size: 0.94rem;
+    }
+    .confusion strong { color: var(--ink); }
+    table.notation td:first-child { white-space: nowrap; max-width: none; }
+
     .note {
       background: var(--accent-soft);
       border-left: 3px solid var(--accent);
@@ -308,10 +334,15 @@
       <a href="#installation">Installation</a>
       <a href="#quickstart">Quickstart</a>
       <a href="#concepts">Core concepts</a>
-      <a class="sub" href="#concept-endpoint">Endpoint pairs &amp; the metric E</a>
-      <a class="sub" href="#concept-norms">Injected se(3) norms</a>
-      <a class="sub" href="#concept-compact">Continuous joints &amp; E∘ϕ</a>
-      <a class="sub" href="#concept-tree">The tree metric</a>
+      <a class="sub" href="#concept-notation">Notation cheat sheet</a>
+      <a class="sub" href="#concept-twist">A joint is a twist</a>
+      <a class="sub" href="#concept-endpoint">The endpoint pair</a>
+      <a class="sub" href="#concept-quotient">The metric E and the swap</a>
+      <a class="sub" href="#concept-gauge">Wrap and gauge symmetries</a>
+      <a class="sub" href="#concept-norms">Which norm: E<sub>α</sub> vs E<sub>B</sub></a>
+      <a class="sub" href="#concept-compact">Continuous joints and E<sup>ϕ</sup></a>
+      <a class="sub" href="#concept-tree">Trees: E<sup>tree</sup> and the relaxation</a>
+      <a class="sub" href="#concept-decoder">Reading the table headers</a>
       <a href="#api">API reference</a>
       <a href="#cli">Command-line usage</a>
     </nav>
@@ -394,103 +425,293 @@ pair  = joint_to_endpoint_pair(joint)      <span class="cm"># unordered {a*xi, b
       </section>
 
       <section id="concepts">
-        <h2><span class="sec-no">4</span>Core concepts</h2>
-
-        <h3 id="concept-endpoint">4.1&ensp;Endpoint pairs and the metric E</h3>
+        <h2><span class="sec-no">4</span>Core concepts, as a tutorial</h2>
         <p>
-          A joint is identified with the unordered pair of its endpoint twists
-          <span class="math">{z⁻, z⁺} = {l⁻ξ, l⁺ξ}</span>. Because the pair is unordered,
-          <code>joint_metric</code> takes the minimum over the two pairings. This is the quotient by the
-          ℤ₂ swap and what makes <span class="math">E</span> well defined on joints rather than on labeled
-          endpoint tuples. The hard <span class="math">min</span> is non-differentiable on its tie locus, so
-          <code>training_loss</code> provides a smooth, swap-invariant surrogate for
-          <span class="math">E²</span> suitable as a learning objective.
+          This section is the long version of the paper's Section 3, written for ourselves. Each concept gets its
+          own figure, drawn by <code>scripts/make_tutorial_figures.py</code> with every number computed by the
+          library, and a short list of the confusions it is meant to clear up. The paper's notation is kept
+          throughout.
         </p>
 
-        <h3 id="concept-norms">4.2&ensp;Injected se(3) norms</h3>
-        <p>Every metric function takes an <code>InnerProduct</code>, a callable mapping a shape-(6,) twist to
-          its squared norm. Three constructors are provided:</p>
-        <table>
-          <thead><tr><th>Constructor</th><th>Norm</th></tr></thead>
+        <h3 id="concept-notation">4.0&ensp;Notation cheat sheet</h3>
+        <table class="notation">
+          <thead><tr><th>Symbol</th><th>Meaning</th><th>In code</th></tr></thead>
           <tbody>
-            <tr><td><code>make_split_norm(alpha)</code></td>
-              <td><span class="math">‖Δz‖<sub>α</sub>² = ‖Δω‖² + α²‖Δv‖²</span>, which is dimensionless. The resulting
-                <span class="math">E<sub>α</sub></span> compares every joint by one fixed rule
-                (α is an inverse length, set it to match your units).</td></tr>
-            <tr><td><code>make_kinetic_energy_norm(inertia)</code></td>
-              <td><span class="math">‖Δz‖<sub>B</sub>² = (1/m) Δωᵀ I Δω + ‖Δv + Δω × c‖²</span> from the child
-                link's <code>LinkInertia</code> (mass m, center of mass c, inertia I). The resulting
-                <span class="math">E<sub>B</sub></span> is measured in meters and equals the RMS linearized
-                material motion of the link.</td></tr>
-            <tr><td><code>make_riemannian_norm(metric)</code></td>
-              <td><span class="math">Δzᵀ G Δz</span> for an arbitrary user-supplied symmetric positive-definite
-                6×6 matrix <span class="math">G</span>.</td></tr>
+            <tr><td><span class="math">ξ = (ω, v)</span></td><td>A twist, an element of <span class="math">se(3) ≅ ℝ⁶</span>: rotational part <span class="math">ω</span>, translational part <span class="math">v</span>. Joints use a <em>unit</em> screw: <span class="math">‖ω‖ = 1</span> if it rotates, else <span class="math">‖v‖ = 1</span>.</td><td><code>Twist</code>, <code>Joint.xi_hat</code></td></tr>
+            <tr><td><span class="math">a, o, h</span></td><td>Axis direction, a point on the axis (the origin), and the pitch (meters per radian). These are the URDF parameters that the twist absorbs.</td><td><code>screw_twist(a, o, type, h)</code></td></tr>
+            <tr><td><span class="math">q</span></td><td>The joint coordinate: radians for revolute and helical, meters for prismatic. <span class="math">q = 0</span> is the stored URDF state (the anchor <span class="math">g₀</span>).</td><td>sweep parameter</td></tr>
+            <tr><td><span class="math">l⁻, l⁺</span></td><td>The motion limits, values of <span class="math">q</span>. <span class="math">±∞</span> for a continuous joint.</td><td><code>Joint.a</code>, <code>Joint.b</code></td></tr>
+            <tr><td><span class="math">J = (ξ, [l⁻, l⁺])</span></td><td>A one-DOF joint: what it moves along and how far.</td><td><code>Joint</code></td></tr>
+            <tr><td><span class="math">z<sup>±</sup> = l<sup>±</sup> ξ</span></td><td>The two endpoint twists. Together they form the unordered pair <span class="math">{z⁻, z⁺}</span> that the metric compares.</td><td><code>EndpointPair.u/.v</code></td></tr>
+            <tr><td><span class="math">J₀ = {0, 0}</span></td><td>The fixed (welded) joint, both endpoints at the origin. <span class="math">E(J, J₀)</span> is the motion a joint carries.</td><td><code>cost_to_fixed</code></td></tr>
+            <tr><td><span class="math">E</span></td><td>The quotient metric on endpoint pairs. A subscript names the norm inside it, a superscript names an extension.</td><td><code>joint_metric</code></td></tr>
+            <tr><td><span class="math">‖·‖<sub>α</sub>, E<sub>α</sub></span></td><td>Split norm <span class="math">‖Δω‖² + α²‖Δv‖²</span> with an inverse length <span class="math">α</span>. Dimensionless. Benchmark default <span class="math">α = 1</span>.</td><td><code>make_split_norm(alpha)</code></td></tr>
+            <tr><td><span class="math">‖·‖<sub>B</sub>, E<sub>B</sub></span></td><td>Kinetic-energy norm of the moving link <span class="math">B</span> (mass <span class="math">m</span>, center of mass <span class="math">c</span>, inertia <span class="math">I</span>). In meters.</td><td><code>make_kinetic_energy_norm(inertia)</code></td></tr>
+            <tr><td><span class="math">ϕ, κ, E<sup>ϕ</sup></span></td><td>Radial compactification into the unit ball with scale <span class="math">κ</span> (default <span class="math">π</span>), and <span class="math">E</span> evaluated after it. Handles continuous joints.</td><td><code>radial_compactify</code>, <code>compactified_joint_metric</code></td></tr>
+            <tr><td><span class="math">E<sup>tree</sup></span></td><td>The metric lifted to whole kinematic trees as an edit distance whose costs are all <span class="math">E</span> values.</td><td><code>exact_tree_distance</code>, <code>assignment_tree_distance</code></td></tr>
           </tbody>
         </table>
 
-        <h3 id="concept-compact">4.3&ensp;Continuous joints and the compactification E∘ϕ</h3>
+        <h3 id="concept-twist">4.1&ensp;A joint is a twist</h3>
+        <figure class="tut">
+          <img src="./static/tutorial/twist_embeddings.png" alt="The unit screw twist of a revolute, a prismatic, and a helical joint">
+          <figcaption>How the URDF parameters (type, axis a, origin o, pitch h) become one six-vector. Blue is the rotational part ω, red the translational part v drawn at the world origin.</figcaption>
+        </figure>
         <p>
-          A continuous joint has unbounded limits (<span class="math">l<sup>±</sup> = ±∞</span>), so its endpoint
-          twists escape to infinity. <code>radial_compactify</code> maps <span class="math">se(3)</span> into its
-          unit ball by radial compactification, and <code>compactified_joint_metric</code> measures the quotient
-          distance there:
+          A URDF describes a joint with four separate things: a type, an axis direction <span class="math">a</span>,
+          an origin <span class="math">o</span>, and limits. The first three are really one object, an infinitesimal
+          rigid motion, and that object is the twist <span class="math">ξ = (ω, v)</span>. A revolute joint rotates
+          about the line through <span class="math">o</span> with direction <span class="math">a</span>, which is
+          <span class="math">ξ<sub>rev</sub> = (a, o × a)</span>. A prismatic joint slides along
+          <span class="math">a</span> and has no rotation at all, <span class="math">ξ<sub>pris</sub> = (0, a)</span>.
+          A helical joint adds a translation of <span class="math">h</span> meters per radian along the axis,
+          <span class="math">ξ<sub>hel</sub> = (a, o × a + h a)</span>. Flowing along <span class="math">ξ</span>
+          for <span class="math">q</span> units gives the placement <span class="math">exp(q ξ̂) g₀</span> of the
+          child link, where <span class="math">g₀</span> is the placement stored in the file.
+        </p>
+        <div class="confusion">
+          <strong>Why the moment instead of the origin.</strong> The term <span class="math">o × a</span> is the same
+          for every point <span class="math">o</span> on the axis line, so the twist encodes the line itself and
+          not an arbitrary point picked on it. That is why two annotations of the same hinge with different
+          origin points on the same line produce identical twists.
+          <br><strong>Why "unit".</strong> The twist is normalized so that <span class="math">q</span> carries
+          the physical unit: radians for rotation, meters for translation. The limits are values of
+          <span class="math">q</span> and inherit that unit.
+          <br><strong>The anchor is shared data.</strong> Prediction and ground truth describe the same object in the
+          same stored state, so <span class="math">g₀</span> is not something the kinematic metric judges.
+          Re-zeroing <span class="math">q</span> is not free because it moves the anchor, which the stored meshes
+          pin down.
+        </div>
+
+        <h3 id="concept-endpoint">4.2&ensp;The endpoint pair</h3>
+        <figure class="tut">
+          <img src="./static/tutorial/endpoint_pair.png" alt="Two joints drawn as segments through the origin of twist space">
+          <figcaption>A 2-D slice of twist space. Each joint is the segment from z⁻ = l⁻ξ to z⁺ = l⁺ξ. The origin is the fixed joint J₀, and the distance from J₀ to a joint is the motion that joint carries.</figcaption>
+        </figure>
+        <p>
+          Multiply the unit twist by the two limits and the joint becomes a pair of points in
+          <span class="math">se(3)</span>, <span class="math">{z⁻, z⁺} = {l⁻ ξ, l⁺ ξ}</span>. The direction of the
+          segment is the screw, its length is the range, its position along the line is where the range sits
+          relative to the anchor. Nothing about the joint is lost and nothing about it is duplicated. The segment
+          passes through the origin whenever <span class="math">l⁻ ≤ 0 ≤ l⁺</span>, that is, whenever the stored
+          state is inside the range. The fixed joint is the degenerate segment <span class="math">{0, 0}</span>.
+        </p>
+        <div class="confusion">
+          <strong>Limits are first-class data.</strong> The prior template folds the limits into the axis through a
+          motion vector <span class="math">a (l⁺ − l⁻)</span>, which keeps the range width but forgets where the
+          range sits and which way it points. The endpoint pair keeps both.
+          <br><strong>Why an unordered pair.</strong> Nothing physical distinguishes the two ends of a segment.
+          Ordering them would make the metric depend on which limit is called lower, which is exactly the
+          sign convention the next section removes.
+          <br><strong>E(J, J₀) is the "size" of a joint.</strong> Under the split norm it is
+          <span class="math">√((l⁻)² + (l⁺)²)</span> times a fixed factor, and under the kinetic-energy norm it is
+          the RMS material displacement over the range. The tree metric prices structural edits with it.
+        </div>
+
+        <h3 id="concept-quotient">4.3&ensp;The metric E and the ℤ₂ swap</h3>
+        <figure class="tut">
+          <img src="./static/tutorial/swap_quotient.png" alt="The direct and the swapped pairing of two endpoint pairs, and the axis flip">
+          <figcaption>E takes the cheaper of the two ways to pair up the endpoints (left, middle). Flipping the screw and negating the limits redraws the same segment (right), so the quotient makes the axis sign irrelevant.</figcaption>
+        </figure>
+        <p>
+          Two unordered pairs can be matched in two ways, direct (<span class="math">z₁⁻ ↔ z₂⁻</span>,
+          <span class="math">z₁⁺ ↔ z₂⁺</span>) or swapped. Each way has a flat distance in
+          <span class="math">se(3) × se(3)</span>, the square root of the two squared endpoint differences, and
         </p>
         <p class="display-math">
-          ϕ(z) = tanh(‖z‖/κ) z/‖z‖,&emsp;
-          E<sup>ϕ</sup>(J₁, J₂) = E({ϕ(z₁⁻), ϕ(z₁⁺)}, {ϕ(z₂⁻), ϕ(z₂⁺)}).
+          E(J₁, J₂) = min{ ‖z₁⁻ − z₂⁻‖² + ‖z₁⁺ − z₂⁺‖²,&ensp;‖z₁⁻ − z₂⁺‖² + ‖z₁⁺ − z₂⁻‖² }<sup>1/2</sup>.
         </p>
         <p>
-          A continuous joint becomes the antipodal boundary pair <span class="math">{±ξ}</span>, the axis
-          direction up to sign, and <span class="math">E<sup>ϕ</sup></span> is continuous as a bounded joint's
-          limits grow toward the continuous limit, so bounded and continuous joints are compared on one compact
-          space in a single dimensionless score. The benchmark uses <span class="math">κ = π</span>.
-          <code>interval_term</code> supplies the extended-real comparison of the limit intervals themselves.
+          This is the quotient distance of a flat space by the group ℤ₂ acting as the swap, and a quotient by a
+          finite group of isometries is again a metric. That single fact gives the triangle inequality, which no
+          hand-built combination of component errors has.
+        </p>
+        <div class="confusion">
+          <strong>What the swap buys.</strong> Reversing the screw orientation maps
+          <span class="math">(ξ, [l⁻, l⁺])</span> to <span class="math">(−ξ, [−l⁺, −l⁻])</span>. The two endpoint
+          twists are unchanged as a set, only their labels trade places, so the swapped pairing scores zero
+          against the original. The axis-sign ambiguity that breaks the prior limit score is removed
+          structurally, not patched.
+          <br><strong>Squares then a root, not a sum of norms.</strong> The two endpoint differences are combined in
+          quadrature. This is what makes <span class="math">E</span> the flat distance of the product space and
+          what makes <span class="math">E<sub>B</sub></span> an RMS quantity later.
+          <br><strong>Where E is not smooth.</strong> Only on the tie locus where the two pairings cost the same.
+          For training, <code>training_loss</code> replaces the min by a smooth swap-invariant surrogate.
+        </div>
+
+        <h3 id="concept-gauge">4.4&ensp;Wrap and gauge symmetries</h3>
+        <figure class="tut">
+          <img src="./static/tutorial/revolute_wrap.png" alt="The 2 pi orbit of revolute limits and E against a shift of both limits">
+          <figcaption>Left: every interval on the 2π orbit is the same motion. The wrap keeps the one whose midpoint lies in [−π, π). Right: shifting both limits of a GT [0, π/2] by θ. With the wrap, a full turn returns E to zero. The seam at θ = 135° is where the midpoint crosses π.</figcaption>
+        </figure>
+        <p>
+          A revolute exponential is <span class="math">2π</span>-periodic, so shifting both limits by
+          <span class="math">2πk</span> rewrites the same motion over the same anchor. Before forming the
+          endpoint pair, the library shifts a revolute joint's limits by the common
+          <span class="math">2πk</span> that places the midpoint <span class="math">½(l⁻ + l⁺)</span> in
+          <span class="math">[−π, π)</span> (<code>wrap_revolute_limits</code>). Only revolute joints are wrapped:
+          a prismatic shift translates and a helical shift also translates, so for them
+          <span class="math">k = 0</span> is forced.
+        </p>
+        <div class="confusion">
+          <strong>The wrap has a seam.</strong> Picking one representative per orbit is a choice of fundamental
+          domain, and at its boundary (midpoint exactly <span class="math">±π</span>) the representative jumps.
+          <span class="math">E</span> is invariant under the full-turn shift but is discontinuous there. On the
+          benchmark this locus has measure zero and, in practice, real limits rarely have a midpoint near
+          <span class="math">±π</span>. The raw limits stay stored on the <code>Joint</code>, so the prior
+          component scores still see the unwrapped encoding, which is exactly the failure the paper's table
+          documents.
+        </div>
+        <figure class="tut">
+          <img src="./static/tutorial/prismatic_gauge.png" alt="Two prismatic joints with different drawn origins have identical twists">
+          <figcaption>Left: a slider drawn from two different origins is the same twist, E = 0. Right: the same construction for a hinge changes the moment o × a, so the pivot line moved and E is not zero.</figcaption>
+        </figure>
+        <p>
+          A prismatic twist is <span class="math">(0, a)</span> and contains no origin at all, so moving the
+          drawn origin is pure gauge and the metric returns zero. The prior origin score charges
+          <span class="math">‖o₁ − o₂‖</span> for it. For a revolute joint the origin matters through the moment,
+          which is the physically right behavior: a hinge on a different line moves the door differently.
         </p>
 
-        <h3 id="concept-tree">4.4&ensp;The tree metric</h3>
+        <h3 id="concept-norms">4.5&ensp;Which norm: E<sub>α</sub> versus E<sub>B</sub></h3>
         <p>
-          At object level a kinematic tree has links for nodes and one-DOF joints for edges. The fixed joint
-          <span class="math">J₀ = {0, 0}</span> is a canonical origin, and <span class="math">E(J, J₀)</span>
-          measures how much motion a joint carries. The tree metric is an edit distance whose every cost comes
-          from <span class="math">E</span> itself: an edit <em>substitutes</em> the joint on an edge at cost
-          <span class="math">E(J, J′)</span>, <em>contracts</em> an edge by merging its two links at cost
-          <span class="math">E(J, J₀)</span>, or <em>expands</em> a link into two joined by a new joint at the
-          same cost, and
+          The formula for <span class="math">E</span> only asks for a norm on twist differences
+          <span class="math">Δz = (Δω, Δv)</span> that comes from an inner product. Two are offered, and the
+          subscript on <span class="math">E</span> says which one is inside.
         </p>
-        <p class="display-math">
-          E<sup>tree</sup>(T₁, T₂) = inf<sub>π : T₁ ⇝ T₂</sub> Σ<sub>o ∈ π</sub> c(o)
-        </p>
+        <figure class="tut">
+          <img src="./static/tutorial/inner_products.png" alt="A fifteen degree axis error scored on rods of different length under both norms">
+          <figcaption>The same 15° axis error on a short and a long link. The split norm scores it identically for every link. The kinetic-energy norm scores it by the material that actually moves.</figcaption>
+        </figure>
         <p>
-          over finite edit sequences <span class="math">π</span> on unrooted trees with unlabeled nodes. No
-          hand-set topology penalty appears: a nearly welded extra handle is charged
-          <span class="math">ε‖ξ‖</span> rather than a constant. Exactly-fixed edges are contracted first
-          (<code>contract_small_edges</code>). They are representation noise, not structure.
+          The <em>split norm</em> <span class="math">‖Δz‖<sub>α</sub>² = ‖Δω‖² + α²‖Δv‖²</span> weighs rotation
+          against translation through one inverse length <span class="math">α</span>. It needs no geometry, is
+          dimensionless, and compares every joint of every object by one rule. The <em>kinetic-energy norm</em>
+          <span class="math">‖Δz‖<sub>B</sub>² = (1/m) Δωᵀ I Δω + ‖Δv + Δω × c‖²</span> lets the moving link set
+          the scale: <span class="math">m</span>, <span class="math">c</span>, and <span class="math">I</span>
+          are the mass, center of mass, and inertia of the ground-truth child link. Under it
+          <span class="math">E<sub>B</sub></span> is in meters and equals the RMS linearized motion of the link's
+          material.
         </p>
-        <p>Two computations are provided:</p>
+        <figure class="tut">
+          <img src="./static/tutorial/material_motion.png" alt="Displacement field of a door under the true hinge and a shifted hinge, and E_B against the hinge offset">
+          <figcaption>Left: a door opened by 60° about the true hinge and about a hinge offset by 0.18 m. The red arrows are where each material point ends up differently. Right: E<sub>B</sub> tracks the RMS of those displacements as the offset grows. The small gap is the linearization.</figcaption>
+        </figure>
+        <div class="confusion">
+          <strong>When the two norms agree.</strong> On purely translational differences
+          (<span class="math">Δω = 0</span>) and <span class="math">α = 1</span> they coincide exactly, which is
+          why the prismatic panels of the ablations overlap. They separate where rotation enters.
+          <br><strong>α is a size assumption.</strong> For a centered link with isotropic inertia and gyration radius
+          <span class="math">r</span>, the kinetic norm equals <span class="math">r²</span> times the split norm at
+          <span class="math">α = 1/r</span>. A global <span class="math">α</span> therefore assumes every link has
+          the same size <span class="math">1/α</span>. The object-scale ablation shows the consequence:
+          <span class="math">E<sub>B</sub>(s) = s E<sub>B</sub>(1)</span> under a uniform scaling
+          <span class="math">s</span>, while <span class="math">E<sub>α</sub></span> is flat on angular errors.
+          <br><strong>E<sub>B</sub> is still a metric.</strong> The body <span class="math">B</span> is fixed by the
+          ground truth before any prediction is seen and is the same for every method on that joint, so the
+          norm is one fixed inner-product norm and the quotient argument applies verbatim. Different ground-truth
+          joints carry different norms, which is the intended physical weighting.
+          <br><strong>Units.</strong> <span class="math">E<sub>α</sub></span> is a pure number,
+          <span class="math">E<sub>B</sub></span> is meters. Never compare their heights, only their shapes.
+        </div>
+
+        <h3 id="concept-compact">4.6&ensp;Continuous joints and the compactification E<sup>ϕ</sup></h3>
+        <figure class="tut">
+          <img src="./static/tutorial/compactification.png" alt="The tanh radial map, the unit ball with finite and continuous joints, and E phi against a growing range">
+          <figcaption>Left: the radius after ϕ as a function of the endpoint norm, for three κ. Middle: inside the ball a finite joint [−L, L]ξ grows toward the boundary, where the continuous joint {±ξ/‖ξ‖} lives. Right: E<sup>ϕ</sup> between a finite prediction and a continuous ground truth decays to zero as the range grows, matching the closed form.</figcaption>
+        </figure>
+        <p>
+          A continuous joint has <span class="math">l<sup>±</sup> = ±∞</span>, so its endpoint twists are at
+          infinity and the flat distance is undefined. The radial map
+          <span class="math">ϕ(z) = tanh(‖z‖/κ) z/‖z‖</span> pulls all of <span class="math">se(3)</span> into the
+          open unit ball and sends the continuous joint to the antipodal boundary pair
+          <span class="math">{±ξ/‖ξ‖}</span>, the axis direction up to sign. Then
+          <span class="math">E<sup>ϕ</sup>(J₁, J₂) = E({ϕ(z₁⁻), ϕ(z₁⁺)}, {ϕ(z₂⁻), ϕ(z₂⁺)})</span>. Against a
+          continuous ground truth with unit screw, a finite prediction <span class="math">[−L, L]</span> on the
+          same screw scores <span class="math">√2 (1 − tanh(L‖ξ‖/κ))</span>: it starts at
+          <span class="math">√2</span>, the distance from the welded joint, and decays to zero. A continuous
+          joint is literally the limit of a growing range, with no formula switch.
+        </p>
+        <div class="confusion">
+          <strong>ϕ uses the same norm as E.</strong> The <span class="math">‖z‖</span> inside
+          <span class="math">ϕ</span> is whichever norm the subscript names, so there is an
+          <span class="math">E<sub>α</sub><sup>ϕ</sup></span> and an <span class="math">E<sub>B</sub><sup>ϕ</sup></span>.
+          Both are dimensionless because the division by <span class="math">‖z‖</span> inside
+          <span class="math">ϕ</span> cancels the units and <span class="math">κ</span> carries the unit of the
+          norm. <span class="math">E<sub>B</sub><sup>ϕ</sup></span> keeps the body-aware weighting but loses the
+          meter reading.
+          <br><strong>What κ does.</strong> It is a pure horizontal dilation of every curve, with half decay near
+          <span class="math">L‖ξ‖ ≈ 0.55 κ</span>. The default <span class="math">κ = π</span> keeps ranges up to a
+          full turn in the responsive part of tanh, and on the benchmark's finite ground-truth joints none
+          saturate (95th percentile radius 0.78 at worst).
+          <br><strong>Finite joints may also be compactified.</strong> The map is defined on all of
+          <span class="math">se(3)</span>, so <span class="math">E<sup>ϕ</sup></span> is the one score that covers
+          every joint type at once. That is why the benchmark's common column is
+          <span class="math">E<sub>α</sub><sup>ϕ</sup></span>. Raw <span class="math">E<sub>B</sub></span> is
+          reported only on pairs whose limits are both finite.
+        </div>
+
+        <h3 id="concept-tree">4.7&ensp;Trees: E<sup>tree</sup> and the assignment relaxation</h3>
+        <figure class="tut">
+          <img src="./static/tutorial/tree_edit.png" alt="A storyboard of the three edit operations turning a predicted tree into the ground truth">
+          <figcaption>The three edits: contract an edge (merge its two links), substitute the joint on an edge, expand a link into two joined by a new joint. Every cost is an E value, and the welded joint J₀ is the reference for contraction and expansion.</figcaption>
+        </figure>
+        <p>
+          An object is a tree with links as nodes and joints on the edges, and the same object admits many
+          trees: parts can be relabeled, the base re-chosen, a handle welded to a drawer or split off. The tree
+          metric is the cheapest sequence of edits from one tree to the other,
+          <span class="math">E<sup>tree</sup>(T₁, T₂) = inf<sub>π</sub> Σ<sub>o∈π</sub> c(o)</span>, with
+          substitution costing <span class="math">E(J, J′)</span> and contraction or expansion costing
+          <span class="math">E(J, J₀)</span>. A spurious joint that barely moves costs
+          <span class="math">ε‖ξ‖</span>, not a constant penalty, so topology errors and joint errors are priced in
+          the same motion currency and the metric is continuous through the welded boundary. Exactly fixed edges
+          are contracted first (<code>contract_small_edges</code>) because they are representation noise.
+        </p>
+        <figure class="tut">
+          <img src="./static/tutorial/tree_relaxation.png" alt="A path and a star with the same joint multiset, where the relaxation and the exact distance differ">
+          <figcaption>The two trees carry the same three joints, so the assignment relaxation pairs them one-to-one at zero cost. No tree isomorphism realizes that pairing, so the exact edit distance is positive.</figcaption>
+        </figure>
+        <p>
+          Any edit sequence can be reordered into contract, then substitute along a tree isomorphism, then
+          expand. The exact distance is therefore a minimum over matchings of the edge sets that <em>extend to an
+          isomorphism</em> of the contracted trees. Dropping that realizability condition gives the
+          <em>assignment relaxation</em>: a Hungarian matching over the joint multisets with
+          <span class="math">E(J, J₀)</span> as the unmatched cost (<code>assignment_tree_distance</code>). It is
+          always a lower bound, it is polynomial for any input, and it needs only the multiset of predicted
+          joints. Whenever its optimal matching happens to be realizable, checked in linear time by
+          <code>matching_realizable</code>, the relaxation <em>certifies</em> the exact value.
+          <code>exact_tree_distance</code> returns <code>(distance, certified)</code> and falls back to a small
+          constrained search otherwise.
+        </p>
+        <div class="confusion">
+          <strong>Exact versus relaxed, in numbers.</strong> On the tree ablation the certificate settles 91 % of
+          random corruptions, exact and relaxed agree on 92 %, they agree on every structured sweep, and their
+          rankings correlate at τ = 0.994. The paper states the protocol with the relaxation because unordered
+          tree edit distance is NP-hard in the worst case and because some methods emit joints without a
+          usable tree. The reported tree score is the exact one wherever a tree is available.
+          <br><strong>Why not a constant topology penalty λ.</strong> It jumps by λ the moment a joint appears, is
+          capped at 2λ once unmatching becomes cheaper than matching, and the forced-matching variant escapes
+          the cap only by breaking the triangle inequality. Motion-priced edits have no knob and none of these
+          failures.
+          <br><strong>The per-link weighting and the metric proof.</strong> With one fixed inner product
+          <span class="math">E<sup>tree</sup></span> is a metric on representation-equivalence classes. With the
+          kinetic-energy norm instantiated per ground-truth link, contraction and expansion change which body
+          weighs which joint, so that variant is used as a score without the metric claim.
+        </div>
+
+        <h3 id="concept-decoder">4.8&ensp;Reading the table headers</h3>
         <table>
-          <thead><tr><th>Function</th><th>Semantics</th></tr></thead>
+          <thead><tr><th>Column</th><th>Norm</th><th>Extension</th><th>Defined on</th></tr></thead>
           <tbody>
-            <tr><td><code>assignment_tree_distance</code></td>
-              <td>The assignment <em>relaxation</em>: a Hungarian matching over the joint multisets with
-                <span class="math">E(J, J₀)</span> as the unmatched cost. Polynomial for any input, a certified
-                lower bound of the exact distance, and it needs no tree topology from the prediction.</td></tr>
-            <tr><td><code>exact_tree_distance</code></td>
-              <td>The <em>exact</em> edit distance: the minimum over matchings that extend to an isomorphism of
-                the contracted trees. Returns <code>(distance, certified)</code>. When the relaxation's own
-                optimal matching is realizable (checked in linear time by <code>matching_realizable</code>),
-                exactness is certified without any search.</td></tr>
+            <tr><td><span class="math">E<sub>B</sub></span></td><td>kinetic-energy (meters)</td><td>none, raw endpoints</td><td>matched pairs with finite limits on both sides</td></tr>
+            <tr><td><span class="math">E<sub>α</sub><sup>ϕ</sup></span></td><td>split, α = 1</td><td>compactified, κ = π</td><td>every matched pair, continuous joints included</td></tr>
+            <tr><td><span class="math">E<sub>α</sub><sup>ϕ,tree</sup></span></td><td>split, α = 1</td><td>compactified and lifted to the tree</td><td>whole objects, the primary score</td></tr>
           </tbody>
         </table>
-        <p class="note">
-          Unordered tree edit distance is NP-hard for general trees, which is why the benchmark protocol is
-          stated with the relaxation. At benchmark scale (2 to 8 movable joints) the exact distance is cheap: the
-          certificate settles ≈ 91 % of corrupted predictions, the two quantities agree on ≈ 92 % of them
-          (rank agreement τ = 0.994), and they agree exactly on every structured sweep.
-        </p>
         <p>
-          A simpler object-level alternative, <code>skeleton_distance</code>, adds a constant topology penalty
-          λ per unmatched joint on top of the assigned <span class="math">E</span> cost. It is retained for
-          comparison with prior hard-penalty protocols.
+          The rule is simple once seen: the subscript is the inner product inside the norm, the superscript is
+          what was done to the endpoints before or after <span class="math">E</span>. The design space is the
+          product of the two choices, and any cell of it is a legitimate score.
         </p>
       </section>
 
