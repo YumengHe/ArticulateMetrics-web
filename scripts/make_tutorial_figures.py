@@ -266,11 +266,11 @@ def fig_revolute_wrap() -> None:
     for th in thetas:
         pred = Joint(xi_hat=xi, a=lo + th, b=hi + th, joint_type="revolute")
         p_raw = make_endpoint_pair(xi, pred.a, pred.b)
-        p_wr = joint_to_endpoint_pair(pred)
+        p_wr = joint_to_endpoint_pair(pred, wrap_revolute=True)
         raw.append(_E(g, p_raw)); wrapped.append(_E(g, p_wr))
     deg = np.degrees(thetas)
-    ax2.plot(deg, raw, color=GREY, linestyle="--", linewidth=2, label="raw limits (no wrap)")
-    ax2.plot(deg, wrapped, color=AMBER, linewidth=2.5, label="midpoint wrapped")
+    ax2.plot(deg, raw, color=AMBER, linewidth=2.5, label="raw limits (default)")
+    ax2.plot(deg, wrapped, color=GREY, linestyle="--", linewidth=2, label="midpoint wrapped (optional)")
     seam = 135
     ax2.axvline(seam, color=BRICK, linestyle=":", linewidth=1.2)
     ax2.text(seam + 4, max(wrapped) * 0.97, "seam: midpoint\ncrosses $\\pi$", color=BRICK, fontsize=10.5, va="top")
@@ -278,7 +278,7 @@ def fig_revolute_wrap() -> None:
     ax2.set_ylabel(r"$E_\alpha$")
     ax2.set_xticks([0, 90, 180, 270, 360])
     ax2.legend(frameon=False, fontsize=10.5, loc="upper left")
-    ax2.set_title("A full turn is the same motion: E returns to 0")
+    ax2.set_title("With the optional wrap a full turn returns E to 0")
     _clean(ax2)
     _save(fig, "revolute_wrap.png")
 
