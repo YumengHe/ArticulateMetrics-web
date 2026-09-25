@@ -401,7 +401,8 @@
         transform: scale(1.03);
         box-shadow: 0 4px 10px #b6a9cf;
     }
-    .error-demo-item img {
+    .error-demo-item img,
+    .error-demo-item video {
         width: 100%;
         height: auto;
         border-radius: 4px;
@@ -2230,9 +2231,15 @@
           if (it.error != null && it.error !== '')
               rows.push(`<span class="demo-param-label demo-param-error"><em>E</em><sub>α</sub>:</span><span class="demo-param-val demo-param-error">${esc(it.error)}</span>`);
           const params = rows.length ? `<div class="demo-params">${rows.join('')}</div>` : '';
+          const media = /\.mp4$/i.test(it.file)
+              ? `<video autoplay muted loop playsinline preload="metadata"
+                        poster="static/demo/${esc(it.poster || '')}?v=4" aria-label="${esc(it.title)}">
+                   <source src="static/demo/${esc(it.file)}?v=4" type="video/mp4">
+                 </video>`
+              : `<img src="static/demo/${esc(it.file)}?v=4" alt="${esc(it.title)}" loading="lazy">`;
           return `
           <div class="error-demo-item">
-            <img src="static/demo/${esc(it.file)}?v=3" alt="${esc(it.title)}" loading="lazy">
+            ${media}
             <h4>${esc(it.title)}</h4>
             ${params}
           </div>`;
